@@ -105,8 +105,10 @@
     <Compile Include="ViewModels\AddMvvmCommandVisitorsViewModelFactoryTests.cs" />
     <Compile Include="ViewModels\BindableTests.cs" />
     <Compile Include="ViewModels\CreateCommandsAndOvvmViewModelFactoryTests.cs" />
+    <Compile Include="ViewModels\EnumerableEmptyPredicateVisitorTests.cs" />
     <Compile Include="ViewModels\ExistingObservableViewModelBuilderOptionsTests.cs" />
     <Compile Include="ViewModels\ExistingObservableViewModelBuilderTests.cs" />
+    <Compile Include="ViewModels\NullReferenceEmptyPredicateVisitorTests.cs" />
     <Compile Include="ViewModels\ObservablePropertyTests.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilderOptionsTests.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilderProviderTests.cs" />

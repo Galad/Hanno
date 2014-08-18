@@ -66,13 +66,14 @@ namespace TestUniversalApp.Composition
 				new ContainerControlledLifetimeManager(),
 				new InjectionFactory(unityContainer => RegisterPages(new PageDefinitionRegistry())));
 			container.RegisterType<UnityViewModelFactory>(new ContainerControlledLifetimeManager());
-			container.RegisterType<IViewModelFactory, AddMvvmCommandVisitorsViewModelFactory>(
+			container.RegisterType<IViewModelFactory, AddMvvmVisitorsViewModelFactory>(
 				new ContainerControlledLifetimeManager(),
 				new InjectionFactory(unityContainer =>
 					new MonitoringInstancesViewModelFactory(
-						new AddMvvmCommandVisitorsViewModelFactory(
+						new AddMvvmVisitorsViewModelFactory(
 							container.Resolve<UnityViewModelFactory>(),
-							container.ResolveAll<IMvvmCommandVisitor>()),
+							container.ResolveAll<IMvvmCommandVisitor>(),
+							container.ResolveAll<IObservableViewModelVisitor>()),
 						TimeSpan.FromSeconds(5))));
 
 			container.RegisterType<IResources>(
@@ -81,6 +82,8 @@ namespace TestUniversalApp.Composition
 			container.RegisterType<IMvvmCommandVisitor, DisplayMessageWhenErrorOccursVisitor>("DisplayDefaultError", new ContainerControlledLifetimeManager());
 			container.RegisterType<IAsyncMessageDialog, AsyncMessageDialog>(new ContainerControlledLifetimeManager(),
 				new InjectionFactory(c => new AsyncMessageDialog(c.Resolve<IScheduler>("DispatcherScheduler"))));
+			container.RegisterType<IObservableViewModelVisitor, NullReferenceEmptyPredicateVisitor>("NullReferenceEmptyPredicate", new ContainerControlledLifetimeManager());
+			container.RegisterType<IObservableViewModelVisitor, EnumerableEmptyPredicateVisitor>("EnumerableEmptyPredicate", new ContainerControlledLifetimeManager());
 		}
 
 		private IPageDefinitionRegistry RegisterPages(IPageDefinitionRegistry registry)

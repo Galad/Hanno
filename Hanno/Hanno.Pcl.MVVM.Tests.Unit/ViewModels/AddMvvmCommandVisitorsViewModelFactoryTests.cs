@@ -15,7 +15,7 @@ namespace Hanno.Tests.ViewModels
 	{
 		[Theory, AutoMoqData]
 		public void Sut_IsViewModelFactory(
-		  AddMvvmCommandVisitorsViewModelFactory sut)
+		  AddMvvmVisitorsViewModelFactory sut)
 		{
 			sut.Should().BeAssignableTo<IViewModelFactory>();
 		}
@@ -24,13 +24,13 @@ namespace Hanno.Tests.ViewModels
 		public void Sut_TestConstructorGuadClauses(
 			GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<AddMvvmCommandVisitorsViewModelFactory>();
+			assertion.VerifyConstructor<AddMvvmVisitorsViewModelFactory>();
 		}
 
 		[Theory, AutoMoqData]
 		public void ResolveViewModel_ShouldReturnCorrectValue(
 			[Frozen]Mock<IViewModelFactory> innerFactory,
-			AddMvvmCommandVisitorsViewModelFactory sut,
+			AddMvvmVisitorsViewModelFactory sut,
 			IViewModel expected,
 			object request)
 		{
@@ -45,11 +45,11 @@ namespace Hanno.Tests.ViewModels
 		}
 
 		[Theory, AutoMoqData]
-		public void ResolveViewModel_ShouldAddVisitors_ShouldReturnCorrectValue(
+		public void ResolveViewModel_ShouldAddVisitors(
 			[Frozen]Mock<IViewModelFactory> innerFactory,
 			[Frozen]IEnumerable<IMvvmCommandVisitor> visitors,
-			AddMvvmCommandVisitorsViewModelFactory sut,
-			Mock<ViewModelBase> viewModel,
+			AddMvvmVisitorsViewModelFactory sut,
+			Mock<IViewModel> viewModel,
 			Mock<ICommandBuilderProvider> commandBuilderProvider,
 			object request)
 		{
@@ -71,9 +71,35 @@ namespace Hanno.Tests.ViewModels
 		}
 
 		[Theory, AutoMoqData]
+		public void ResolveViewModel_ShouldAddOvmVisitors(
+			[Frozen]Mock<IViewModelFactory> innerFactory,
+			[Frozen]IEnumerable<IObservableViewModelVisitor> visitors,
+			AddMvvmVisitorsViewModelFactory sut,
+			Mock<IViewModel> viewModel,
+			Mock<IObservableViewModelBuilderProvider> ovmBuilderProvider,
+			object request)
+		{
+			//arrange
+			innerFactory.Setup(f => f.ResolveViewModel(request)).Returns(() => viewModel.Object);
+			viewModel.Setup(vm => vm.OvmBuilderProvider).Returns(() => ovmBuilderProvider.Object);
+			foreach (var ovmVisitor in visitors)
+			{
+				var visitor = ovmVisitor;
+				ovmBuilderProvider.Setup(provider => provider.AddVisitor(visitor))
+									  .Verifiable();
+			}
+
+			//act
+			sut.ResolveViewModel(request);
+
+			//assert
+			ovmBuilderProvider.Verify();
+		}
+
+		[Theory, AutoMoqData]
 		public void ReleaseViewModel_ShouldReturnCorrectValue(
 			[Frozen]Mock<IViewModelFactory> innerFactory,
-			AddMvvmCommandVisitorsViewModelFactory sut,
+			AddMvvmVisitorsViewModelFactory sut,
 			IViewModel expected)
 		{
 			//arrange		

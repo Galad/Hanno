@@ -7,6 +7,7 @@ namespace Hanno.ViewModels
     {
         Task RefreshAsync();
 	    void Refresh();
+	    void Accept(IObservableViewModelVisitor visitor);
     }
 
 	public interface IObservableViewModel<out T> : IObservableViewModel

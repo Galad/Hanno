@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
+using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
+using Ploeh.AutoFixture.Idioms;
 using Ploeh.AutoFixture.Xunit;
 using Xunit.Extensions;
 
@@ -35,20 +37,29 @@ namespace Hanno.Tests.ViewModels
 			fixture.Freeze(new Subject<System.Reactive.Unit>());
 			fixture.Freeze(new Exception());
 			fixture.Register<IObservable<System.Reactive.Unit>>(() => fixture.Create<Subject<System.Reactive.Unit>>());
+			RegisterOvm<object>(fixture);
+			RegisterOvm<object[]>(fixture);
+			RegisterOvm<string[]>(fixture);
+			RegisterOvm<int>(fixture);
+			RegisterOvm<int?>(fixture);
+		}
+
+		private void RegisterOvm<T>(IFixture fixture)
+		{
 			fixture.Register(() =>
 			{
 				bool hasBeenRun = false;
-				return new ObservableViewModel<object>(ct =>
+				return new ObservableViewModel<T>(ct =>
 				{
-					var t = GetValue(fixture, hasBeenRun);
+					var t = GetValue<T>(fixture, hasBeenRun);
 					hasBeenRun = true;
 					return t;
 				},
-				o => _emptyResult, fixture.Create<IObservable<System.Reactive.Unit>>(), _timeout, new CompositeDisposable());
+					o => _emptyResult, fixture.Create<IObservable<System.Reactive.Unit>>(), _timeout, new CompositeDisposable());
 			});
 		}
 
-		private Task<object> GetValue(IFixture fixture, bool hasBeenRun)
+		private Task<T> GetValue<T>(IFixture fixture, bool hasBeenRun)
 		{
 			return Task.Run(() =>
 				{
@@ -56,7 +67,7 @@ namespace Hanno.Tests.ViewModels
 					{
 						throw fixture.Create<Exception>();
 					}
-					return fixture.Create<object>();
+					return fixture.Create<T>();
 				});
 		}
 	}
@@ -269,6 +280,83 @@ namespace Hanno.Tests.ViewModels
 			//assert
 			var actual = sut.CurrentValue;
 			actual.Should().BeNull();
+		}
+
+		[Theory, RvvmAutoData]
+		public void Accept_ShouldCallVisitor(
+			ObservableViewModel<object> sut,
+			Mock<IObservableViewModelVisitor> visitor)
+		{
+			//act
+			sut.Accept(visitor.Object);
+
+			//assert
+			visitor.Verify(v => v.Visit(sut));
+		}
+
+		[Theory, RvvmAutoData]
+		public void Accept_GuardClauses(
+			GuardClauseAssertion assertion)
+		{
+			assertion.Verify((ObservableViewModel<object> sut) => sut.Accept(default(IObservableViewModelVisitor)));
+		}
+
+		[Theory, RvvmAutoData]
+		public async Task ChainEmptyPredicate_WhenPredicateReturnsTrue_OvmStateShouldBeEmpty(
+			[Frozen]TestSchedulers schedulers,
+		  ObservableViewModel<object> sut)
+		{
+			//arrange
+			Func<object, bool> predicate = o => true;
+			var observer = schedulers.CreateObserver<ObservableViewModelNotification>();
+			sut.ChainEmptyPredicate(predicate);
+			sut.Subscribe(observer);
+
+			//act
+			await sut.RefreshAsync();
+
+			//assert
+			observer.Values().Last().Should().Match<ObservableViewModelNotification>(n => n.Status == ObservableViewModelStatus.Empty);
+		}
+
+		[Theory, RvvmAutoData]
+		public async Task ChainEmptyPredicate_WhenPredicateReturnsFalse_OvmStateShouldBeValue(
+			[Frozen]TestSchedulers schedulers,
+		  ObservableViewModel<object> sut)
+		{
+			//arrange
+			Func<object, bool> predicate = o => false;
+			var observer = schedulers.CreateObserver<ObservableViewModelNotification>();
+			sut.ChainEmptyPredicate(predicate);
+			sut.Subscribe(observer);
+
+			//act
+			await sut.RefreshAsync();
+
+			//assert
+			observer.Values().Last().Should().Match<ObservableViewModelNotification>(n => n.Status == ObservableViewModelStatus.Value);
+		}
+
+		[Theory, RvvmAutoData]
+		public async Task ChainEmptyPredicate_WithManyPredicatesAndWhenPredicateReturnsTrue_OvmStateShouldBeEmpty(
+			[Frozen]TestSchedulers schedulers,
+		  ObservableViewModel<object> sut)
+		{
+			//arrange
+			Func<object, bool> predicate1 = o => false;
+			Func<object, bool> predicate2 = o => false;
+			Func<object, bool> predicate3 = o => true;
+			var observer = schedulers.CreateObserver<ObservableViewModelNotification>();
+			sut.ChainEmptyPredicate(predicate1);
+			sut.ChainEmptyPredicate(predicate2);
+			sut.ChainEmptyPredicate(predicate3);
+			sut.Subscribe(observer);
+
+			//act
+			await sut.RefreshAsync();
+
+			//assert
+			observer.Values().Last().Should().Match<ObservableViewModelNotification>(n => n.Status == ObservableViewModelStatus.Empty);
 		}
 	}
 }

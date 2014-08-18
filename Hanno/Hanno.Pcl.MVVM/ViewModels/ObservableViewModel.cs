@@ -110,6 +110,12 @@ namespace Hanno.ViewModels
 			}
 		}
 
+		public void Accept(IObservableViewModelVisitor visitor)
+		{
+			if (visitor == null) throw new ArgumentNullException("visitor");
+			visitor.Visit(this);
+		}
+
 		private ObservableViewModelNotification SelectValue(T arg)
 		{
 			return EmptyPredicate(arg) ?
@@ -128,6 +134,21 @@ namespace Hanno.ViewModels
 		public IDisposable Subscribe(IObserver<ObservableViewModelNotification> observer)
 		{
 			return _notificationsObservable.Subscribe(observer);
+		}
+
+		public void ChainEmptyPredicate(Func<T, bool> chainedPredicate)
+		{
+			//capture empty predicate in the current context
+			var previousPredicate = EmptyPredicate;
+			EmptyPredicate = arg =>
+			{
+				var isEmpty = previousPredicate(arg);
+				if (isEmpty)
+				{
+					return true;
+				}
+				return chainedPredicate(arg);
+			};
 		}
 
 		public void Dispose()

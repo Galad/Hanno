@@ -104,7 +104,8 @@ namespace Hanno.ViewModels
 			{
 				if (_ovmBuilderProvider == null)
 				{
-					_ovmBuilderProvider = new ObservableViewModelBuilderProvider(() => this, () => this.Services.Schedulers);
+					_ovmBuilderProvider = new ObservableViewModelBuilderProvider(() => this, () => this.Services.Schedulers,
+						(action, s1, s2) => new ObservableViewModelBuilder(action, s1, s2));
 					((ObservableViewModelBuilderProvider)_ovmBuilderProvider).DisposeWith(LongDisposables);
 				}
 				return _ovmBuilderProvider;
@@ -156,8 +157,9 @@ namespace Hanno.ViewModels
 				{
 					vmBase.Services = Services;
 				}
-				CommandBuilderProvider.CopyVisitors(vmBase.CommandBuilderProvider);
 			}
+			CommandBuilderProvider.CopyVisitors(child.CommandBuilderProvider);
+			OvmBuilderProvider.CopyVisitors(child.OvmBuilderProvider);
 			return child;
 		}
 

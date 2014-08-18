@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 
@@ -9,15 +10,23 @@ namespace Hanno.ViewModels
 	{
 		private readonly Func<IBindable> _getParent;
 		private readonly Func<ISchedulers> _getSchedulers;
+		private readonly Func<Action<IObservableViewModel>, IScheduler, IScheduler, IObservableViewModelBuilder> _builderFactory;
 		private readonly IDictionary<string, IObservableViewModel> viewModels = new Dictionary<string, IObservableViewModel>();
 		private readonly CompositeDisposable disposables = new CompositeDisposable();
+		private List<IObservableViewModelVisitor> _visitors;
 
-		public ObservableViewModelBuilderProvider(Func<IBindable> getParent,  Func<ISchedulers> getSchedulers)
+		public ObservableViewModelBuilderProvider(
+			Func<IBindable> getParent,
+			Func<ISchedulers> getSchedulers,
+			Func<Action<IObservableViewModel>, IScheduler, IScheduler, IObservableViewModelBuilder> builderFactory)
 		{
 			if (getParent == null) throw new ArgumentNullException("getParent");
 			if (getSchedulers == null) throw new ArgumentNullException("getSchedulers");
+			if (builderFactory == null) throw new ArgumentNullException("builderFactory");
 			_getParent = getParent;
 			_getSchedulers = getSchedulers;
+			_builderFactory = builderFactory;
+			_visitors = new List<IObservableViewModelVisitor>();
 		}
 
 		public IObservableViewModelBuilder Get(string name)
@@ -38,8 +47,12 @@ namespace Hanno.ViewModels
 			if (!exist)
 			{
 				var schedulers = _getSchedulers();
-				builder = new ObservableViewModelBuilder(viewModel =>
+				builder = _builderFactory(viewModel =>
 				{
+					foreach (var observableViewModelVisitor in _visitors)
+					{
+						viewModel.Accept(observableViewModelVisitor);
+					}
 					viewModels[name] = viewModel;
 					var disposable = viewModel as IDisposable;
 					if (disposable != null) disposable.DisposeWith(disposables);
@@ -55,6 +68,19 @@ namespace Hanno.ViewModels
 			return builder;
 		}
 
+		public void AddVisitor(IObservableViewModelVisitor visitor)
+		{
+			_visitors.Add(visitor);
+		}
+
+		public void CopyVisitors(IObservableViewModelBuilderProvider observableViewModelBuilderProvider)
+		{
+			foreach (var observableViewModelVisitor in _visitors)
+			{
+				observableViewModelBuilderProvider.AddVisitor(observableViewModelVisitor);
+			}
+		}
+
 		public void Dispose()
 		{
 			disposables.Dispose();
@@ -62,7 +88,7 @@ namespace Hanno.ViewModels
 		}
 	}
 
-	public class TemporaryObservableViewModel : IObservableViewModel
+	internal class TemporaryObservableViewModel : IObservableViewModel
 	{
 		public IDisposable Subscribe(IObserver<ObservableViewModelNotification> observer)
 		{
@@ -75,6 +101,10 @@ namespace Hanno.ViewModels
 		}
 
 		public void Refresh()
+		{
+		}
+
+		public void Accept(IObservableViewModelVisitor visitor)
 		{
 		}
 	}

@@ -113,10 +113,11 @@
     <Compile Include="Validation\Rules\ValidationRuleExtensions.cs" />
     <Compile Include="Validation\Validable.cs" />
     <Compile Include="Validation\ValidationErrorEventArgs.cs" />
-    <Compile Include="ViewModels\AddDefaultMvvmCommandVisitorsViewModelFactory.cs" />
+    <Compile Include="ViewModels\AddMvvmVisitorsViewModelFactory.cs" />
     <Compile Include="ViewModels\Bindable.cs" />
     <Compile Include="ViewModels\CreateCommandsAndOvvmViewModelFactory.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
+    <Compile Include="ViewModels\EnumerableEmptyPredicateVisitor.cs" />
     <Compile Include="ViewModels\ExistingObservableViewModelBuilder.cs" />
     <Compile Include="ViewModels\ExistingObservableViewModelBuilderOptions.cs" />
     <Compile Include="ViewModels\IItemViewModel.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="ViewModels\IObservableViewModelBuilder.cs" />
     <Compile Include="ViewModels\IObservableViewModelBuilderOptions.cs" />
     <Compile Include="ViewModels\IObservableViewModelBuilderProvider.cs" />
+    <Compile Include="ViewModels\IObservableViewModelVisitor.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />
     <Compile Include="ViewModels\IViewModelFactory.cs" />
     <Compile Include="ViewModels\IViewModelServices.cs" />
