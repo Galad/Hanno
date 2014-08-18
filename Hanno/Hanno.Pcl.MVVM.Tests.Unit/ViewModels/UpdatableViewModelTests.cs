@@ -1,0 +1,82 @@
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Hanno.ViewModels;
+using Microsoft.Reactive.Testing;
+using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.Xunit;
+using Xunit.Extensions;
+
+namespace Hanno.Tests.ViewModels
+{
+	public class UpdatableViewModelTests : ReactiveTest
+	{
+		[Theory, AutoData]
+		public async Task TestedMethod_ShouldReturnCorrectValue(
+		  IFixture fixture,
+			TestScheduler scheduler)
+		{
+			//arrange
+			const int insertionIndex = 5;
+			var initialList = fixture.CreateMany<int>(10).ToArray();
+			var addedList = fixture.CreateMany<int>(10).ToArray();
+			var expected = initialList.Take(insertionIndex)
+									  .Concat(addedList.Reverse())
+									  .Concat(initialList.Skip(insertionIndex))
+									  .ToArray();
+			var notifications = scheduler.CreateColdObservable(addedList.Select((i, ii) => OnNext(Subscribed + 1 + ii, i)).ToArray());
+			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
+				_ => { },
+				ct => Task.FromResult(initialList),
+				() => notifications,
+				scheduler,
+				scheduler)
+				.UpdateAction((i, o) => () => o.Insert(insertionIndex, i))
+				.ToViewModel();
+
+			//act
+
+			scheduler.Start();
+			await sut.RefreshAsync();
+			scheduler.AdvanceBy(Disposed);
+			var actual = ((IObservableViewModel<ObservableCollection<int>>)sut).CurrentValue;
+			//assert
+
+			actual.ShouldAllBeEquivalentTo(expected);
+		}
+
+		[Theory, AutoData]
+		public async Task TestedMethod_WhenRefreshed_ShouldDisposePreviousNotificationsSubscriptions(
+		  IFixture fixture,
+			TestScheduler scheduler,
+			int[] values)
+		{
+			//arrange
+			var notifications = scheduler.CreateColdObservable<int>();
+			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
+				_ => { },
+				ct => Task.FromResult(values),
+				() => notifications,
+				scheduler,
+				scheduler)
+				.UpdateAction((i, o) => () => { })
+				.ToViewModel();
+			const long disposeTime = 805;
+
+			//act
+
+			scheduler.Start();
+			await sut.RefreshAsync();
+			//we advance to an arbitrary time
+			scheduler.AdvanceBy(disposeTime);
+			//the subscription to the new observable should happen here
+			//the first subscription should be dispose at the current scheduler time
+			await sut.RefreshAsync();
+			
+			//assert
+			notifications.Subscriptions[0].Unsubscribe.Should().Be(disposeTime);
+		}
+	}
+}

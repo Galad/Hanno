@@ -1,0 +1,34 @@
+﻿using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Hanno.Commands
+{
+	public class ObservableMvvmCommandWithObservableCanExecute<TCommand, TObservable> : ObservableMvvmCommand<TCommand, TObservable>
+	{
+		public IObservable<bool> ObservablePredicate { get; private set; }
+		private bool _canExecuteFromObservable = true;
+
+		public ObservableMvvmCommandWithObservableCanExecute(
+			Func<TCommand, IObservable<TObservable>> factory,
+			ISchedulers schedulers,
+			string name,
+			IObservable<bool> observablePredicate,
+			ICanExecuteStrategy<TCommand> canExecuteStrategy,
+			Func<IObserver<TObservable>> doObserver = null,
+			IScheduler doScheduler = null,
+			Func<CancellationToken, Exception, Task> errorTask = null)
+			: base(
+				factory,
+				schedulers,
+				name,
+				new ObserveCanExecuteStrategy<TCommand>(observablePredicate, canExecuteStrategy),
+				doObserver,
+				doScheduler,
+				errorTask)
+		{
+		}
+	}
+}

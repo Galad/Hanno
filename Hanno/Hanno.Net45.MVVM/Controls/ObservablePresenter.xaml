@@ -1,0 +1,64 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls2="clr-namespace:Hanno.MVVM.Controls">
+
+    <Style x:Key="ObservablePresenterBase" TargetType="controls2:ObservablePresenter">
+        <Setter Property="UpdatingTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="Updating..."></TextBlock>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ValueTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Value}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="InitializedTemplate">
+            <Setter.Value>
+                <DataTemplate />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="EmptyTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="It is empty" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ErrorTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock >
+                        <Run Text="An error occured" />
+                        <LineBreak />
+                        <Run Text="{Binding Value}" />
+                         <LineBreak />
+                        <Run Text="{Binding Value.StackTrace, Mode=OneWay}" />
+                    </TextBlock>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls2:ObservablePresenter">
+                    <Border Background="{TemplateBinding Background}" 
+                            Margin="{TemplateBinding Padding}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource ObservablePresenterBase}" TargetType="controls2:ObservablePresenter">
+
+    </Style>
+</ResourceDictionary>
+

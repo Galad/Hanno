@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D2D485CD-2EAD-48ED-A8CD-ABE6971C6D63}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hanno</RootNamespace>
+    <AssemblyName>Hanno.Pcl</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Collection\DoubleList.cs" />
+    <Compile Include="ComparerHelper.cs" />
+    <Compile Include="CqrsInfrastructure\AsyncCommandQueryBus.cs" />
+    <Compile Include="CqrsInfrastructure\CommandEventArgs.cs" />
+    <Compile Include="CqrsInfrastructure\AsyncCommandBase.cs" />
+    <Compile Include="CqrsInfrastructure\CompositeCommandHandler.cs" />
+    <Compile Include="CqrsInfrastructure\CqrsParameterBase.cs" />
+    <Compile Include="CqrsInfrastructure\CqrsQueryBase.cs" />
+    <Compile Include="CqrsInfrastructure\DelegateCommandHandler.cs" />
+    <Compile Include="CqrsInfrastructure\DelegateQueryHandler.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncCommandHandlerFactory.cs" />
+    <Compile Include="CqrsInfrastructure\EnumerableArrayResultCqrsQuery.cs" />
+    <Compile Include="CqrsInfrastructure\EnumerableCqrsCommand.cs" />
+    <Compile Include="CqrsInfrastructure\EnumerableCqrsQuery.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncQueryCommandHandlerFactory.cs" />
+    <Compile Include="CqrsInfrastructure\ICqrsCommand.cs" />
+    <Compile Include="CqrsInfrastructure\ICqrsQuery.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncCommandBus.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncCommandHandler.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncQueryBus.cs" />
+    <Compile Include="CqrsInfrastructure\IAsyncQueryHandler.cs" />
+    <Compile Include="CqrsInfrastructure\ParallelQueryHandler.cs" />
+    <Compile Include="Diagnostics\DebuggerAsyncCommandBus.cs" />
+    <Compile Include="Diagnostics\DebuggerAsyncQueryBus.cs" />
+    <Compile Include="Diagnostics\InstanceTracker.cs" />
+    <Compile Include="Diagnostics\ObjectExtensions.cs" />
+    <Compile Include="Diagnostics\PerformanceAsyncQueryBus.cs" />
+    <Compile Include="Diagnostics\PerformanceAsyncCommandBus.cs" />
+    <Compile Include="Diagnostics\PerformanceTime.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\ExpressionExtensions.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Globalization\IResources.cs" />
+    <Compile Include="IEntityBuilder.cs" />
+    <Compile Include="IInitializable.cs" />
+    <Compile Include="IO\Compression\ICompressionService.cs" />
+    <Compile Include="IO\FileAccess.cs" />
+    <Compile Include="IO\FileMode.cs" />
+    <Compile Include="IO\IAcyncFileOperations.cs" />
+    <Compile Include="IO\IAsyncDirectoryOperations.cs" />
+    <Compile Include="IO\IAsyncFileOperations.cs" />
+    <Compile Include="IO\IDirectoryOperations.cs" />
+    <Compile Include="IO\IFileOperations.cs" />
+    <Compile Include="Patterns\Composite.cs" />
+    <Compile Include="Serialization\GuidSerializer.cs" />
+    <Compile Include="Serialization\IDeserializer.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\SafeStringDeserializer.cs" />
+    <Compile Include="Serialization\SafeStringSerializer.cs" />
+    <Compile Include="Serialization\ValueTypeSerializer.cs" />
+    <Compile Include="Serialization\XmlSerializer.cs" />
+    <Compile Include="Storage\AsyncFromStringKeyValuePairFilesDataTable.cs" />
+    <Compile Include="Storage\AsyncStorage.cs" />
+    <Compile Include="Storage\BackgroundAsyncStorage.cs" />
+    <Compile Include="Storage\FromStringKeyValuePairFilesDataTable.cs" />
+    <Compile Include="Storage\IAsyncDataTable.cs" />
+    <Compile Include="Storage\IAsyncDataTableFactory.cs" />
+    <Compile Include="Storage\IAsyncStorage.cs" />
+    <Compile Include="Storage\IDataTable.cs" />
+    <Compile Include="Storage\IDataTableFactory.cs" />
+    <Compile Include="Storage\Transactions\ITransaction.cs" />
+    <Compile Include="Storage\Transactions\ITransactionalAsyncDataTable.cs" />
+    <Compile Include="Storage\Transactions\ITransactionalAsyncDataTableFactory.cs" />
+    <Compile Include="Storage\Transactions\IUnitOfWork.cs" />
+    <Compile Include="Storage\Transactions\IUnitOfWorkFactory.cs" />
+    <Compile Include="Storage\Transactions\StorageOperation.cs" />
+    <Compile Include="Storage\Transactions\TransactionAsyncDataTableFactory.cs" />
+    <Compile Include="Storage\Transactions\UnitOfWork.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

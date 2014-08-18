@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>ee3fc4e5-bf52-47e9-b7ee-5614b8e97489</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TestUniversalApp</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ApplicationPages.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\Composer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\Factories\UnityAsyncDataTableFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\Factories\UnityCommandQueryHandlerFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\Factories\UnityViewModelFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\IUnityModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\MainModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\PhoneModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\UnityRuleProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\ValidationRuleModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Composition\WinRTModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SecondPage.xaml.cs">
+      <DependentUpon>SecondPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)SecondViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThirdPage.xaml.cs">
+      <DependentUpon>ThirdPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)ThirdViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)SecondPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)ThirdPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Resources.resw" />
+  </ItemGroup>
+</Project>

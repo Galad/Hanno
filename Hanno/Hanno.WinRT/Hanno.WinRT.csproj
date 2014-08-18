@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8E27B9F7-AF62-4479-9A2E-0E834BB04DEE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hanno</RootNamespace>
+    <AssemblyName>Hanno.WinRT</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile32</TargetFrameworkProfile>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <Page Include="MVVM\Controls\ObservablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <TargetPlatform Include="WindowsPhoneApp, Version=8.1" />
+    <TargetPlatform Include="Windows, Version=8.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Hanno.Net45.MVVM\Controls\ObservablePresenter.cs">
+      <Link>MVVM\Controls\ObservablePresenter.cs</Link>
+    </Compile>
+    <Compile Include="..\Hanno.Phone\IO\FromStorageFolderDirectoryOperations.cs">
+      <Link>IO\FromStorageFolderDirectoryOperations.cs</Link>
+    </Compile>
+    <Compile Include="Xaml\Converters\BoolToValueConverter.cs" />
+    <Compile Include="Xaml\Converters\BoolToVisibility.cs" />
+    <Compile Include="Xaml\Converters\CompositeConverter.cs" />
+    <Compile Include="Xaml\Converters\NullToVisibility.cs" />
+    <Compile Include="Xaml\Converters\StringFormatConverter.cs" />
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
+    <Compile Include="Extensions\ViewViewModelBuilderExtensions.cs" />
+    <Compile Include="Globalization\ResourceLoaderService.cs" />
+    <Compile Include="IO\AsyncDirectoryOperations.cs" />
+    <Compile Include="IO\AsyncFileOperations.cs" />
+    <Compile Include="MVVM\Navigation\NavigationService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rx\Concurrency\CoreDispatcherPriorityScheduler.cs" />
+    <Compile Include="Rx\Concurrency\ThreadPoolPriorityScheduler.cs" />
+    <Compile Include="Rx\Concurrency\WinRTSchedulers.cs" />
+    <Compile Include="Services\AsyncMessageDialog.cs" />
+    <Compile Include="Xaml\Converters\ToLowercaseConverter.cs" />
+    <Compile Include="Xaml\Converters\ToUppercaseConverter.cs" />
+    <Compile Include="Xaml\Controls\ItemClickCommand.cs" />
+    <Compile Include="Xaml\VisibilityHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hanno.Pcl.MVVM\Hanno.Pcl.MVVM.csproj">
+      <Project>{b7b7c861-3c9d-4e1f-ab07-3f60fb4a181b}</Project>
+      <Name>Hanno.Pcl.MVVM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanno.Pcl.Rx\Hanno.Pcl.Rx.csproj">
+      <Project>{a0a262f6-b8e6-489c-80bf-82f08262fae7}</Project>
+      <Name>Hanno.Pcl.Rx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hanno.Pcl\Hanno.Pcl.csproj">
+      <Project>{d2d485cd-2ead-48ed-a8cd-abe6971c6d63}</Project>
+      <Name>Hanno.Pcl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\portable-win81+wpa81\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\portable-win81+wpa81\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\portable-win81+wpa81\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\portable-win81+wpa81\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Windows.Threading">
+      <HintPath>..\packages\Rx-XAML.2.2.5\lib\portable-win81+wpa81\System.Reactive.Windows.Threading.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Update.bat" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(ProjectDir)Update.bat"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

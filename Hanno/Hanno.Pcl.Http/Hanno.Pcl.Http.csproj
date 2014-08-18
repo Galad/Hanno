@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7CE4FEB5-C348-4296-9CB2-9AF01A335828}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hanno</RootNamespace>
+    <AssemblyName>Hanno.Pcl.Http</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Http\BuildSynchronousHttpRequest.cs" />
+    <Compile Include="Http\DefaultHttpRequestBus.cs" />
+    <Compile Include="Http\DefaultHttpRequestResolver.cs" />
+    <Compile Include="Http\DeserializerHttpRequestResultReader.cs" />
+    <Compile Include="Http\HttpRequest.cs" />
+    <Compile Include="Http\HttpRequestBuilder.cs" />
+    <Compile Include="Http\HttpRequestBuilderFactory.cs" />
+    <Compile Include="Http\HttpRequestBuilderOptions.cs" />
+    <Compile Include="Http\HttpRequestMethodBuilderExtensions.cs" />
+    <Compile Include="Http\HttpRequestResult.cs" />
+    <Compile Include="Http\HttpRequestSpecificationsTransformer.cs" />
+    <Compile Include="Http\HttpRequestSuccessException.cs" />
+    <Compile Include="Http\HttpResponseContent.cs" />
+    <Compile Include="Http\IBuildHttpRequest.cs" />
+    <Compile Include="Http\IBuildHttpRequestResolver.cs" />
+    <Compile Include="Http\ICookie.cs" />
+    <Compile Include="Http\IHttpContent.cs" />
+    <Compile Include="Http\IHttpRequest.cs" />
+    <Compile Include="Http\IHttpRequestBuilder.cs" />
+    <Compile Include="Http\IHttpRequestBuilderFactory.cs" />
+    <Compile Include="Http\IHttpRequestBuilderOptions.cs" />
+    <Compile Include="Http\IHttpRequestDefinition.cs" />
+    <Compile Include="Http\IHttpRequestMethodBuilder.cs" />
+    <Compile Include="Http\IHttpRequestResolver.cs" />
+    <Compile Include="Http\IHttpRequestResult.cs" />
+    <Compile Include="Http\IHttpRequestResultReader.cs" />
+    <Compile Include="Http\IHttpRequestResultReaderResolver.cs" />
+    <Compile Include="Http\IHttpRequestSpecification.cs" />
+    <Compile Include="Http\IHttpRequestSpecificationResolver.cs" />
+    <Compile Include="Http\IHttpRequestSpecificationsTransformer.cs" />
+    <Compile Include="Http\NoResponse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hanno.Pcl\Hanno.Pcl.csproj">
+      <Project>{d2d485cd-2ead-48ed-a8cd-abe6971c6d63}</Project>
+      <Name>Hanno.Pcl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.27-beta\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.27-beta\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.27-beta\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
