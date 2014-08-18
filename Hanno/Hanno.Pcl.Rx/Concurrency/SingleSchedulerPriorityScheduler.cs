@@ -3,6 +3,10 @@ using System.Reactive.Concurrency;
 
 namespace Hanno.Concurrency
 {
+	/// <summary>
+	/// A priority scheduler which does not support priority.
+	/// It uses the same scheduler for every priority
+	/// </summary>
 	public class SingleSchedulerPriorityScheduler : IPriorityScheduler
 	{
 		private readonly IScheduler _scheduler;
@@ -28,9 +32,14 @@ namespace Hanno.Concurrency
 			return _scheduler.Schedule(state, dueTime, action);
 		}
 
-		public DateTimeOffset Now { get { return _scheduler.Now; } }
-		public IScheduler High { get { return _scheduler; } }
-		public IScheduler Normal { get { return _scheduler; } }
-		public IScheduler Low { get { return _scheduler; } }
+		public DateTimeOffset Now
+		{
+			get { return _scheduler.Now; }
+		}
+
+		public IScheduler SchedulerFromPriority(SchedulerPriority priority)
+		{
+			return _scheduler;
+		}
 	}
 }

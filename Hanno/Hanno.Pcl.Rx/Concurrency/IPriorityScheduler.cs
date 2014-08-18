@@ -2,10 +2,16 @@
 
 namespace Hanno.Concurrency
 {
+	public enum SchedulerPriority
+	{
+		Lowest,
+		Low,
+		Normal,
+		High
+	}
+
 	public interface IPriorityScheduler : IScheduler
 	{
-		IScheduler High { get; }
-		IScheduler Normal { get; }
-		IScheduler Low { get; }
+		IScheduler SchedulerFromPriority(SchedulerPriority priority);
 	}
 }

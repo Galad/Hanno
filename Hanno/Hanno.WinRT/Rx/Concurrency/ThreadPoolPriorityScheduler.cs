@@ -5,6 +5,9 @@ using Hanno.Concurrency;
 
 namespace Hanno.Rx.Concurrency
 {
+	/// <summary>
+	/// PriorityScheduler using the thread pool.
+	/// </summary>
 	public sealed class ThreadPoolPriorityScheduler : IPriorityScheduler
 	{
 		private readonly ThreadPoolScheduler _lowScheduler;
@@ -34,9 +37,25 @@ namespace Hanno.Rx.Concurrency
 		}
 
 		public DateTimeOffset Now { get { return _normalScheduler.Now; } }
+		public IScheduler SchedulerFromPriority(SchedulerPriority priority)
+		{
+			switch (priority)
+			{
+				case SchedulerPriority.Lowest:
+				case SchedulerPriority.Low:
+					return _lowScheduler;
+				case SchedulerPriority.Normal:
+					return _normalScheduler;
+				case SchedulerPriority.High:
+					return _highScheduler;
+				default:
+					throw new ArgumentOutOfRangeException("priority");
+			}
+		}
+
 		public IScheduler High { get { return _highScheduler; } }
 		public IScheduler Normal { get { return _normalScheduler; } }
 		public IScheduler Low { get { return _lowScheduler; } }
-		public IScheduler Idle { get { return _lowScheduler; } }
+		public IScheduler Lowest { get { return _lowScheduler; } }
 	}
 }
