@@ -61,9 +61,45 @@ namespace Hanno.ViewModels
 			ViewModel = viewModel;
 		}
 
-		public IObservableViewModelBuilderOptions<ObservableCollection<T>> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector)
+		public IUpdatableObservableViewModelBuilderOptions<T> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector)
 		{
-			return new ExistingObservableViewModelBuilderOptions<ObservableCollection<T>>(ViewModel);
+			return new ExistingUpdatableObservableViewModelBuilderOptions<T>(ViewModel);
+		}
+	}
+
+	public class ExistingUpdatableObservableViewModelBuilderOptions<T> : IUpdatableObservableViewModelBuilderOptions<T>
+	{
+		public ExistingUpdatableObservableViewModelBuilderOptions(IObservableViewModel viewModel)
+		{
+			if (viewModel == null) throw new ArgumentNullException("viewModel");
+			ViewModel = viewModel;
+		}
+
+		public IObservableViewModel ViewModel { get; private set; }
+
+		public IObservableViewModelBuilderOptions<ObservableCollection<T>> EmptyPredicate(Func<ObservableCollection<T>, bool> predicate)
+		{
+			return this;
+		}
+
+		public IObservableViewModelBuilderOptions<ObservableCollection<T>> RefreshOn<TRefresh>(IObservable<TRefresh> refreshTrigger)
+		{
+			return this;
+		}
+
+		public IObservableViewModelBuilderOptions<ObservableCollection<T>> Timeout(TimeSpan timeout)
+		{
+			return this;
+		}
+
+		public IObservableViewModel<ObservableCollection<T>> ToViewModel()
+		{
+			return (IObservableViewModel<ObservableCollection<T>>)ViewModel;
+		}
+
+		public IObservableViewModelBuilderOptions<ObservableCollection<T>> RefreshOnCollectionUpdateNotification()
+		{
+			return this;
 		}
 	}
 }

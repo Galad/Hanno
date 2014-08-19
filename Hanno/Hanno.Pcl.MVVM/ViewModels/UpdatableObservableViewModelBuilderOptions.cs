@@ -6,6 +6,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,8 +44,8 @@ namespace Hanno.ViewModels
 		}
 	}
 
-	public class UpdatableObservableViewModelBuilderOptions<T, TCollection, TNotification> : 
-		IObservableViewModelBuilderOptions<ObservableCollection<T>>,
+	public class UpdatableObservableViewModelBuilderOptions<T, TCollection, TNotification> :
+		IUpdatableObservableViewModelBuilderOptions<T>,
 		IUpdatableObservableViewModelBuilderOptionsUpdateAction<T, TNotification>
 		 where TCollection : IEnumerable<T>
 	{
@@ -57,6 +58,7 @@ namespace Hanno.ViewModels
 		private Func<ObservableCollection<T>, bool> _emptyPredicate = arg => false;
 		private IObservable<Unit> _refreshOn = Observable.Empty<Unit>();
 		private TimeSpan _timeout = TimeSpan.Zero;
+		private bool _refreshOnCollectionUpdateNotification;
 
 		public UpdatableObservableViewModelBuilderOptions(
 			Action<IObservableViewModel> saveViewModel,
@@ -97,7 +99,7 @@ namespace Hanno.ViewModels
 			return this;
 		}
 
-		public IObservableViewModelBuilderOptions<ObservableCollection<T>> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector)
+		public IUpdatableObservableViewModelBuilderOptions<T> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector)
 		{
 			if (updateActionSelector == null) throw new ArgumentNullException("updateActionSelector");
 			ActionSelector = updateActionSelector;
@@ -109,15 +111,33 @@ namespace Hanno.ViewModels
 			var subscription = new CompositeDisposable();
 			var updateSubscription = new SerialDisposable().DisposeWith(subscription);
 			Func<CancellationToken, Task<ObservableCollection<T>>> source = ct => GetSource(ct, Source, updateSubscription);
+			Subject<Unit> subject = _refreshOnCollectionUpdateNotification ? new Subject<Unit>() : null;
 
 			var viewModel = new ObservableViewModel<ObservableCollection<T>>(
 				source,
 				_emptyPredicate,
-				_refreshOn,
+				subject ?? _refreshOn,
 				_timeout,
 				subscription);
+			if (_refreshOnCollectionUpdateNotification)
+			{
+				SubscribeToRefreshOnCollectionUpdateNotification(subscription, viewModel, subject);
+			}
+
 			_saveViewModel(viewModel);
 			return viewModel;
+		}
+
+		private void SubscribeToRefreshOnCollectionUpdateNotification(CompositeDisposable subscription, ObservableViewModel<ObservableCollection<T>> viewModel, IObserver<Unit> observer)
+		{
+			this.Notifications()
+				.Window(viewModel.Where(n => n.Status == ObservableViewModelStatus.Empty || n.Status == ObservableViewModelStatus.Error || n.Status == ObservableViewModelStatus.Initialized),
+					_ => viewModel.Where(n => n.Status == ObservableViewModelStatus.Updating || n.Status == ObservableViewModelStatus.Value))
+				.SelectMany(o => o)
+				.SelectUnit()
+				.Do(_ => { }, e => { }, () => { })
+				.Subscribe(observer)
+				.DisposeWith(subscription);
 		}
 
 		private async Task<ObservableCollection<T>> GetSource(CancellationToken ct, Func<CancellationToken, Task<TCollection>> sourceFactory, SerialDisposable disposable)
@@ -137,6 +157,12 @@ namespace Hanno.ViewModels
 					out observableCollection)
 				.Subscribe(_ => { }, e => { }, () => { });
 			return observableCollection;
+		}
+
+		public IObservableViewModelBuilderOptions<ObservableCollection<T>> RefreshOnCollectionUpdateNotification()
+		{
+			_refreshOnCollectionUpdateNotification = true;
+			return this;
 		}
 	}
 }

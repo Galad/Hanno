@@ -19,6 +19,11 @@ namespace Hanno.ViewModels
 
 	public interface IUpdatableObservableViewModelBuilderOptionsUpdateAction<T, TNotification>
 	{
-		IObservableViewModelBuilderOptions<ObservableCollection<T>> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector);
+		IUpdatableObservableViewModelBuilderOptions<T> UpdateAction(Func<TNotification, ObservableCollection<T>, Action> updateActionSelector);
+	}
+
+	public interface IUpdatableObservableViewModelBuilderOptions<T> : IObservableViewModelBuilderOptions<ObservableCollection<T>>
+	{
+		IObservableViewModelBuilderOptions<ObservableCollection<T>> RefreshOnCollectionUpdateNotification();
 	}
 }

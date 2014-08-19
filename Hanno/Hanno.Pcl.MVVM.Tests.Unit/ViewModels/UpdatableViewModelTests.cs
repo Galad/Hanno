@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
 using Microsoft.Reactive.Testing;
 using Ploeh.AutoFixture;
@@ -14,7 +16,7 @@ namespace Hanno.Tests.ViewModels
 	public class UpdatableViewModelTests : ReactiveTest
 	{
 		[Theory, AutoData]
-		public async Task TestedMethod_ShouldReturnCorrectValue(
+		public async Task ViewModel_ShouldReturnCorrectValue(
 		  IFixture fixture,
 			TestScheduler scheduler)
 		{
@@ -48,7 +50,7 @@ namespace Hanno.Tests.ViewModels
 		}
 
 		[Theory, AutoData]
-		public async Task TestedMethod_WhenRefreshed_ShouldDisposePreviousNotificationsSubscriptions(
+		public async Task ViewModel_WhenRefreshed_ShouldDisposePreviousNotificationsSubscriptions(
 		  IFixture fixture,
 			TestScheduler scheduler,
 			int[] values)
@@ -74,9 +76,41 @@ namespace Hanno.Tests.ViewModels
 			//the subscription to the new observable should happen here
 			//the first subscription should be dispose at the current scheduler time
 			await sut.RefreshAsync();
-			
+
 			//assert
 			notifications.Subscriptions[0].Unsubscribe.Should().Be(disposeTime);
+		}
+
+		[Theory, AutoData]
+		public void ViewModel_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
+		  IFixture fixture,
+			TestScheduler scheduler,
+			int[] expectedValue)
+		{
+			//arrange
+			var notifications = scheduler.CreateColdObservable(OnNext(201, 1));
+			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
+			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
+				_ => { },
+				ct => Task.FromResult(expectedValue),
+				() => notifications,
+				scheduler,
+				scheduler)
+				.UpdateAction((i, o) => () => { })
+				.RefreshOnCollectionUpdateNotification()
+				.ToViewModel();
+			sut.Subscribe(observer);
+
+			//act
+			scheduler.AdvanceBy(300);
+
+			//assert
+			var expected = new ObservableViewModelNotification()
+			{
+				Status = ObservableViewModelStatus.Value,
+				Value = expectedValue
+			};
+			observer.Values().Last().ShouldBeEquivalentTo(expected);
 		}
 	}
 }

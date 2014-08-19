@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -49,7 +50,7 @@ namespace Hanno.ViewModels
 					 .DisposeWith(_subscriptions);
 
 			//intialization
-			_notificationsObservable = _notificationsSubject.Replay(1);
+			_notificationsObservable = _notificationsSubject.Replay(1, ImmediateScheduler.Instance);
 			_notificationDisposable = _notificationsObservable.Connect();
 			_notificationsSubject.OnNext(new ObservableViewModelNotification()
 			{
