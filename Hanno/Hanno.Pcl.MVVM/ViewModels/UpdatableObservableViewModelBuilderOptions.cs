@@ -131,9 +131,8 @@ namespace Hanno.ViewModels
 		private void SubscribeToRefreshOnCollectionUpdateNotification(CompositeDisposable subscription, ObservableViewModel<ObservableCollection<T>> viewModel, IObserver<Unit> observer)
 		{
 			this.Notifications()
-				.Window(viewModel.Where(n => n.Status == ObservableViewModelStatus.Empty || n.Status == ObservableViewModelStatus.Error || n.Status == ObservableViewModelStatus.Initialized),
-					_ => viewModel.Where(n => n.Status == ObservableViewModelStatus.Updating || n.Status == ObservableViewModelStatus.Value))
-				.SelectMany(o => o)
+				.SelectMany(n => viewModel.Take(1))
+				.Where(n => n.Status == ObservableViewModelStatus.Empty || n.Status == ObservableViewModelStatus.Error || n.Status == ObservableViewModelStatus.Initialized)
 				.SelectUnit()
 				.Do(_ => { }, e => { }, () => { })
 				.Subscribe(observer)

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -81,14 +82,15 @@ namespace Hanno.Tests.ViewModels
 			notifications.Subscriptions[0].Unsubscribe.Should().Be(disposeTime);
 		}
 
-		[Theory, AutoData]
-		public void ViewModel_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
-		  IFixture fixture,
+		[Theory,
+		AutoData]
+		public void ViewModel_WhenInitialized_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
+			IFixture fixture,
 			TestScheduler scheduler,
 			int[] expectedValue)
 		{
 			//arrange
-			var notifications = scheduler.CreateColdObservable(OnNext(201, 1));
+			var notifications = scheduler.CreateColdObservable(OnNext(200, 1));
 			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
 			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
 				_ => { },
@@ -102,7 +104,7 @@ namespace Hanno.Tests.ViewModels
 			sut.Subscribe(observer);
 
 			//act
-			scheduler.AdvanceBy(300);
+			scheduler.Start();
 
 			//assert
 			var expected = new ObservableViewModelNotification()
@@ -110,7 +112,74 @@ namespace Hanno.Tests.ViewModels
 				Status = ObservableViewModelStatus.Value,
 				Value = expectedValue
 			};
-			observer.Values().Last().ShouldBeEquivalentTo(expected);
+			observer.Values().Last().Value.As<ObservableCollection<int>>().ShouldAllBeEquivalentTo(expectedValue);
+		}
+
+		[Theory,
+		AutoData]
+		public async Task ViewModel_WhenEmpty_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
+			IFixture fixture,
+			TestScheduler scheduler,
+			int[] expectedValue)
+		{
+			//arrange
+			var notifications = scheduler.CreateColdObservable(OnNext(200, 1));
+			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
+			var count = 0;
+			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
+				_ => { },
+				ct => Task.FromResult(expectedValue),
+				() => notifications,
+				scheduler,
+				scheduler)
+				.UpdateAction((i, o) => () => { })
+				.RefreshOnCollectionUpdateNotification()
+				.EmptyPredicate(_ => ++count == 1)
+				.ToViewModel();
+			sut.Subscribe(observer);
+
+			//act
+			await sut.RefreshAsync();
+			scheduler.AdvanceBy(300);
+
+			//assert
+			observer.Values().Last().Value.As<ObservableCollection<int>>().ShouldAllBeEquivalentTo(expectedValue);
+		}
+
+		[Theory,
+		AutoData]
+		public async Task ViewModel_WhenError_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
+			IFixture fixture,
+			TestScheduler scheduler,
+			int[] expectedValue)
+		{
+			//arrange
+			var notifications = scheduler.CreateColdObservable(OnNext(200, 1));
+			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
+			var count = 0;
+			var sut = new UpdatableObservableViewModelBuilderOptions<int, int[], int>(
+				_ => { },
+				async ct =>
+				{
+					if (++count == 1)
+						throw new Exception();
+					else
+						return expectedValue;
+				},
+				() => notifications,
+				scheduler,
+				scheduler)
+				.UpdateAction((i, o) => () => { })
+				.RefreshOnCollectionUpdateNotification()
+				.ToViewModel();
+			sut.Subscribe(observer);
+
+			//act
+			await sut.RefreshAsync();
+			scheduler.AdvanceBy(300);
+
+			//assert
+			observer.Values().Last().Value.As<ObservableCollection<int>>().ShouldAllBeEquivalentTo(expectedValue);
 		}
 	}
 }
