@@ -10,6 +10,10 @@ namespace TestUniversalApp
 {
 	public class SecondViewModel : ViewModelBase
 	{
+		public SecondViewModel(IViewModelServices services) : base(services)
+		{
+		}
+
 		public ICommand Navigate
 		{
 			get

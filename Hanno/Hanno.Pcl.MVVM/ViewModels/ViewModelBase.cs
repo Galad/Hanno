@@ -32,8 +32,10 @@ namespace Hanno.ViewModels
 			}
 		}
 
-		protected ViewModelBase()
+		protected ViewModelBase(IViewModelServices services)
 		{
+			if (services == null) throw new ArgumentNullException("services");
+			_services = services;
 			_children = new List<IViewModel>();
 			ViewModels = _children;
 			ShortDisposables = new CompositeDisposable();
@@ -46,6 +48,7 @@ namespace Hanno.ViewModels
 
 		public void Initialize(INavigationRequest navigationRequest)
 		{
+			if (navigationRequest == null) throw new ArgumentNullException("navigationRequest");
 			NavigationRequest = navigationRequest;
 			foreach (var viewModel in _children)
 			{
@@ -87,14 +90,6 @@ namespace Hanno.ViewModels
 			get
 			{
 				return _services;
-			}
-			set
-			{
-				if (_services != null)
-				{
-					throw new InvalidOperationException("Services are already defined");
-				}
-				_services = value;
 			}
 		}
 
@@ -150,16 +145,12 @@ namespace Hanno.ViewModels
 		{
 			_children.Add(child);
 			LongDisposables.Add(child);
-			var vmBase = child as ViewModelBase;
-			if (vmBase != null)
-			{
-				if (vmBase.Services == null)
-				{
-					vmBase.Services = Services;
-				}
-			}
 			CommandBuilderProvider.CopyVisitors(child.CommandBuilderProvider);
 			OvmBuilderProvider.CopyVisitors(child.OvmBuilderProvider);
+			if (NavigationRequest != null)
+			{
+				child.Initialize(NavigationRequest);
+			}
 			return child;
 		}
 

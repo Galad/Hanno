@@ -16,6 +16,9 @@ namespace Hanno.Tests.ViewModels
 {
 	public class ViewModelTest : ViewModelBase
 	{
+		public ViewModelTest(IViewModelServices services) : base(services)
+		{
+		}
 	}
 
 	public class ViewModelExtensionsTests : ReactiveTest

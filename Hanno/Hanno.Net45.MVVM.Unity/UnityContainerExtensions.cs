@@ -10,9 +10,9 @@ namespace Microsoft.Practices.Unity
 {
 	public static class UnityContainerExtensions
 	{
-		public static void RegisterViewModel<TViewModel>(
+		public static IUnityContainer RegisterViewModel<TViewModel>(
 			this IUnityContainer container,
-			Func<IUnityContainer, TViewModel> factory,
+			Func<IUnityContainer, IViewModelServices, TViewModel> factory,
 			Func<IUnityContainer, IViewModelServices> viewModelServicesFactory = null)
 			where TViewModel : ViewModelBase
 		{
@@ -20,13 +20,8 @@ namespace Microsoft.Practices.Unity
 			{
 				viewModelServicesFactory = c => c.Resolve<IViewModelServices>();
 			}
-			container.RegisterType<TViewModel>(
-				new InjectionFactory(c =>
-				{
-					var vm = factory(c);
-					vm.Services = viewModelServicesFactory(c);
-					return vm;
-				}));
+			return container.RegisterType<TViewModel>(
+				new InjectionFactory(c => factory(c, viewModelServicesFactory(c))));
 		}
 	}
 }

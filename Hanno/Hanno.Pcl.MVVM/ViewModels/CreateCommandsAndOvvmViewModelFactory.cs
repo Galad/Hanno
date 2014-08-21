@@ -43,7 +43,7 @@ namespace Hanno.ViewModels
 															IsGenericTypeDefinitionProperty(p.PropertyType, observablePropertyType))
 												.Select(p => p.GetMethod)
 												.ToList();
-				
+
 				//find inner view models  recursively
 				var viewModelTypeInfo = typeof(IViewModel).GetTypeInfo();
 				var childrenGetters = viewModelType.GetTypeInfo()
@@ -54,14 +54,6 @@ namespace Hanno.ViewModels
 
 				methodInfos = new Tuple<IList<MethodInfo>, IList<MethodInfo>>(propertieGetters, childrenGetters);
 				_knownTypes.Add(viewModelType, methodInfos);
-				var childrenTypes = childrenGetters.Where(m => m.ReturnType != viewModelType).Select(m => m.ReturnType).ToArray();
-				
-				//foreach (var childrenType in childrenTypes)
-				//{
-				//	var innerGetter = FindGetters(childrenType);
-				//	propertieGetters.AddRange(innerGetter.Item1);
-				//	childrenGetters.AddRange(innerGetter.Item2);
-				//}
 			}
 			return methodInfos;
 		}
@@ -80,15 +72,8 @@ namespace Hanno.ViewModels
 		{
 			var viewModel = _innerViewModelFactory.ResolveViewModel(request);
 			var type = viewModel.GetType();
-#if DEBUG
-			PerformanceTime.Measure(() =>
-			{
-#endif
-				var getters = FindGetters(type);
-				InvokeProperties(viewModel, getters);
-#if DEBUG
-			}).DebugWriteline();
-#endif
+			var getters = FindGetters(type);
+			InvokeProperties(viewModel, getters);
 			return viewModel;
 		}
 

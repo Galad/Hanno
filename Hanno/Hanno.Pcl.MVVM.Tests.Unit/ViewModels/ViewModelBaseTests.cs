@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using Hanno.Navigation;
 using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
 using Moq;
@@ -20,9 +21,7 @@ namespace Hanno.Tests.ViewModels
 		{
 			fixture.Behaviors.Remove(fixture.Behaviors.First(transformation => transformation is ThrowingRecursionBehavior));
 			fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-			fixture.Customize<Mock<ViewModelBase>>(d => d.Do(vm => vm.Object.Services = fixture.Create<IViewModelServices>()));
 			fixture.Customize<Mock<IViewModelServices>>(d => d.Do(m => m.Setup(mm => mm.Schedulers).Returns(fixture.Create<ISchedulers>())));
-			//fixture.Customize<TestViewModel>(d => d.Do(vm => vm.Services = fixture.Create<IViewModelServices>()));
 		}
 	}
 
@@ -53,6 +52,11 @@ namespace Hanno.Tests.ViewModels
 
 	public class TestViewModel : ViewModelBase
 	{
+		public TestViewModel(IViewModelServices services)
+			: base(services)
+		{
+		}
+
 		public ViewModelBase CallRegisterChild(ViewModelBase viewModel)
 		{
 			return RegisterChild(viewModel);
@@ -117,6 +121,48 @@ namespace Hanno.Tests.ViewModels
 
 			//assert
 			actual.Should().Be(child.Object);
+		}
+
+		[Theory, ViewModelBaseAutoData]
+		public void Initialize_ShouldCallChildrenInitialize(
+		 TestViewModel sut,
+			Mock<ViewModelBase> child,
+			INavigationRequest request)
+		{
+			//arrange
+			child.As<IViewModel>();
+			sut.CallRegisterChild(child.Object);
+
+			//act
+			sut.Initialize(request);
+
+			//assert
+			child.As<IViewModel>().Verify(c => c.Initialize(request), Times.Once());
+		}
+
+		[Theory, ViewModelBaseAutoData]
+		public void Register_WhenAlreadyInitialized_ShouldCallChildrenInitialize(
+		 TestViewModel sut,
+			Mock<ViewModelBase> child,
+			INavigationRequest request)
+		{
+			//arrange
+			child.As<IViewModel>();
+			sut.Initialize(request);
+			
+			//act
+			sut.CallRegisterChild(child.Object); 
+
+			//assert
+			child.As<IViewModel>().Verify(c => c.Initialize(request), Times.Once());
+		}
+
+		[Theory, ViewModelBaseAutoData]
+		public void Initialize_GuardClauses(
+			TestViewModel sut,
+		 GuardClauseAssertion assertion)
+		{
+			assertion.Verify((INavigationRequest request) => sut.Initialize(request));
 		}
 	}
 }

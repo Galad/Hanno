@@ -22,7 +22,7 @@ namespace TestUniversalApp
 	{
 		private readonly IEntityBuilder _entityBuilder;
 
-		public MainViewModel(IEntityBuilder entityBuilder)
+		public MainViewModel(IViewModelServices services, IEntityBuilder entityBuilder) : base(services)
 		{
 			if (entityBuilder == null) throw new ArgumentNullException("entityBuilder");
 			_entityBuilder = entityBuilder;

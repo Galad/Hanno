@@ -1,6 +1,9 @@
 ﻿using System.Windows.Input;
+using Hanno.CqrsInfrastructure;
 using Hanno.Diagnostics;
+using Hanno.Navigation;
 using Hanno.Testing.Autofixture;
+using Hanno.Validation;
 using Hanno.ViewModels;
 using Moq;
 using Ploeh.AutoFixture.Xunit;
@@ -11,8 +14,25 @@ namespace Hanno.Tests.ViewModels
 {
 	public class CreateCommandsAndOvvmViewModelFactoryTests
 	{
+		public class EmptyViewModelServices : IViewModelServices
+		{
+			public IRuleProvider RuleProvider { get; private set; }
+			public IValidator Validator { get; private set; }
+			public ISchedulers Schedulers { get; private set; }
+			public INavigationService NavigationService { get; private set; }
+			public IRequestNavigation RequestNavigation { get; private set; }
+			public IAsyncCommandBus CommandBus { get; private set; }
+			public IAsyncQueryBus QueryBus { get; private set; }
+			public ICommandEvents CommandEvents { get; private set; }
+			public ICommandStateEvents CommandStateEvents { get; private set; }
+			public IQueryStateEvents QueryStateEvents { get; private set; }
+		}
 		public abstract class ViewModelWithCommands2 : ViewModelBase
 		{
+			public ViewModelWithCommands2() : base(new EmptyViewModelServices())
+			{
+			}
+
 			public abstract ICommand Command1 { get; set; }
 			public abstract ICommand Command2 { get; set; }
 		}
@@ -20,6 +40,11 @@ namespace Hanno.Tests.ViewModels
 		//make the class and the properties abstract in order to be able to make assertions with a mock
 		public abstract class ViewModelWithCommands : ViewModelBase
 		{
+			public ViewModelWithCommands()
+				: base(new EmptyViewModelServices())
+			{
+			}
+
 			public abstract ICommand Command1 { get; set; }
 			public abstract ICommand Command2 { get; set; }
 			public abstract IObservableProperty<string> ObservableProperty1 { get; set; }

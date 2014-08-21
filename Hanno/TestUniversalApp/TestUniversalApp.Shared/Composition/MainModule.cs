@@ -28,9 +28,9 @@ namespace TestUniversalApp.Composition
 	{
 		public void Register(IUnityContainer container)
 		{
-			container.RegisterViewModel(c => new MainViewModel(c.Resolve<IEntityBuilder>()));
-			container.RegisterViewModel(c => new SecondViewModel());
-			container.RegisterViewModel(c => new ThirdViewModel());
+			container.RegisterViewModel((c, s) => new MainViewModel(s, c.Resolve<IEntityBuilder>()));
+			container.RegisterViewModel((c, s) => new SecondViewModel(s));
+			container.RegisterViewModel((c, s) => new ThirdViewModel(s));
 			container.RegisterType<ISerializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringSerializer(new XmlSerializer())));
 			container.RegisterType<IDeserializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringDeserializer(new XmlSerializer())));
 			container.RegisterType<IScheduler>("ThreadPoolScheduler", new ContainerControlledLifetimeManager(), new InjectionFactory(c => ThreadPoolScheduler.Default));
@@ -74,7 +74,7 @@ namespace TestUniversalApp.Composition
 			container.RegisterType<IEntityBuilder, EntityBuilder>(
 				new ContainerControlledLifetimeManager(),
 				new InjectionFactory(c => new EntityBuilder(c.Resolve<IEntityConverterFactory>())));
-			container.RegisterTypes(new EntityConverterConvention(new[] {typeof (App).GetTypeInfo().Assembly}));
+			container.RegisterTypes(new EntityConverterConvention(new[] { typeof(App).GetTypeInfo().Assembly }));
 
 			container.RegisterType<IObservableRegistrationService, ObservableRegistrationService>(
 				new ContainerControlledLifetimeManager(),
