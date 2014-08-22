@@ -131,6 +131,8 @@
     <Compile Include="ViewModels\IViewModel.cs" />
     <Compile Include="ViewModels\IViewModelFactory.cs" />
     <Compile Include="ViewModels\IViewModelServices.cs" />
+    <Compile Include="ViewModels\ObservablePropertyBeforeSetterInterceptor.cs" />
+    <Compile Include="ViewModels\ObservablePropertyAfterSetterInterceptor.cs" />
     <Compile Include="ViewModels\ObservableViewModel.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilder.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilderOptions.cs" />

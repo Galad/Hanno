@@ -81,5 +81,17 @@ namespace Hanno.ViewModels
 		{
 			return observableProperty.Take(1).GetAwaiter();
 		}
+
+		public static IObservableProperty<T> InterceptSetterBefore<T>(this IObservableProperty<T> observableProperty, Action<T, T> interceptor)
+		{
+			if (interceptor == null) throw new ArgumentNullException("interceptor");
+			return new ObservablePropertyBeforeSetterInterceptor<T>(observableProperty, interceptor);
+		}
+
+		public static IObservableProperty<T> InterceptSetterAfter<T>(this IObservableProperty<T> observableProperty, Action<T, T> interceptor)
+		{
+			if (interceptor == null) throw new ArgumentNullException("interceptor");
+			return new ObservablePropertyAfterSetterInterceptor<T>(observableProperty, interceptor);
+		}
 	}
 }

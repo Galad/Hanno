@@ -109,6 +109,8 @@
     <Compile Include="ViewModels\ExistingObservableViewModelBuilderOptionsTests.cs" />
     <Compile Include="ViewModels\ExistingObservableViewModelBuilderTests.cs" />
     <Compile Include="ViewModels\NullReferenceEmptyPredicateVisitorTests.cs" />
+    <Compile Include="ViewModels\ObservablePropertyAfterSetterInterceptorTests.cs" />
+    <Compile Include="ViewModels\ObservablePropertyBeforeSetterInterceptorTests.cs" />
     <Compile Include="ViewModels\ObservablePropertyTests.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilderOptionsTests.cs" />
     <Compile Include="ViewModels\ObservableViewModelBuilderProviderTests.cs" />
