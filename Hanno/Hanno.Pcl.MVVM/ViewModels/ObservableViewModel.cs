@@ -24,10 +24,11 @@ namespace Hanno.ViewModels
 		private readonly IConnectableObservable<ObservableViewModelNotification> _notificationsObservable;
 		private readonly IDisposable _notificationDisposable;
 		private readonly CompositeDisposable _subscriptions;
+		private readonly SerialDisposable _currentExecution;
 
 		public ObservableViewModel(
 			Func<CancellationToken, Task<T>> sourceFactory,
-			Func<T, bool> emptyPredicate, 
+			Func<T, bool> emptyPredicate,
 			IObservable<Unit> refreshOn,
 			TimeSpan timeout,
 			CompositeDisposable subscriptions)
@@ -57,13 +58,15 @@ namespace Hanno.ViewModels
 				Status = ObservableViewModelStatus.Initialized,
 				Value = null
 			});
+			_currentExecution = new SerialDisposable();
 		}
 
 		public async Task RefreshAsync()
 		{
-			var cancellationTokenSource = TimeoutDelay == TimeSpan.Zero ? new CancellationTokenSource() :
-				new CancellationTokenSource(TimeoutDelay);
-			using (cancellationTokenSource)
+			var cancellationTokenSource = new CancellationTokenSource();
+			var disposables = new CompositeDisposable(new CancellationDisposable(cancellationTokenSource));
+			_currentExecution.Disposable = disposables;
+			using (disposables)
 			{
 				_notificationsSubject.OnNext(new ObservableViewModelNotification()
 				{
@@ -71,8 +74,19 @@ namespace Hanno.ViewModels
 					Value = null
 				});
 				ObservableViewModelNotification notification;
+				bool cancelledFromTimeout = false;
 				try
 				{
+					if (TimeoutDelay > TimeSpan.Zero)
+					{
+						Observable.Timer(TimeoutDelay)
+						          .Subscribe(_ =>
+						          {
+							          cancelledFromTimeout = true;
+							          cancellationTokenSource.Cancel();
+						          })
+						          .DisposeWith(disposables);
+					}
 					var value = await Source(cancellationTokenSource.Token);
 					cancellationTokenSource.Token.ThrowIfCancellationRequested();
 					notification = SelectValue(value);
@@ -80,6 +94,10 @@ namespace Hanno.ViewModels
 				}
 				catch (OperationCanceledException)
 				{
+					if (!cancelledFromTimeout)
+					{
+						return;
+					}
 					notification = new ObservableViewModelNotification()
 					{
 						Status = ObservableViewModelStatus.Timeout,

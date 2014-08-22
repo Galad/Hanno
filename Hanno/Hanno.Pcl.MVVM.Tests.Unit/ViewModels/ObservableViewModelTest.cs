@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hanno.Testing.Autofixture;
@@ -61,8 +63,12 @@ namespace Hanno.Tests.ViewModels
 
 		private Task<T> GetValue<T>(IFixture fixture, bool hasBeenRun)
 		{
-			return Task.Run(() =>
+			return Task.Run(async () =>
 				{
+					if (_timeout.TotalMilliseconds > 0)
+					{
+						await Task.Delay(_timeout.Add(TimeSpan.FromMilliseconds(10)));
+					}
 					if (_hasError && !hasBeenRun)
 					{
 						throw fixture.Create<Exception>();
@@ -171,6 +177,89 @@ namespace Hanno.Tests.ViewModels
 				new ObservableViewModelNotification() {Status = ObservableViewModelStatus.Empty, Value = null}
 			};
 			actual.ShouldAllBeEquivalentTo(expected);
+		}
+
+		[Theory, RvvmAutoData]
+		public void RefreshOn_ShouldRefresh(
+		  [Frozen] ThrowingTestScheduler scheduler,
+			[Frozen]Subject<Unit> refreshOn,
+			[Frozen] object value,
+			ObservableViewModel<object> sut)
+		{
+			//arrange
+			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
+			sut.Subscribe(observer);
+
+			//act
+			refreshOn.OnNext(Unit.Default);
+			scheduler.Start();
+
+			//assert
+			var expected = new ObservableViewModelNotification()
+			{
+				Status = ObservableViewModelStatus.Value,
+				Value = value
+			};
+			observer.Values().Last().ShouldBeEquivalentTo(expected);
+		}
+
+		[Theory, RvvmAutoData]
+		public void RefreshOn_WithOverlappingRefresh_ShouldCancelPreviousTask(
+		  [Frozen] ThrowingTestScheduler scheduler,
+			[Frozen]Subject<Unit> refreshOn)
+		{
+			//arrange
+			CancellationToken ct = CancellationToken.None;
+			var i = 0;
+			var sut = new ObservableViewModel<object>(c =>
+			{
+				if (++i == 1)
+				{
+					ct = c;
+					refreshOn.OnNext(Unit.Default);
+				}
+				return Task.FromResult(new object());
+			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable());
+			
+
+			//act
+			refreshOn.OnNext(Unit.Default);
+			scheduler.Start();
+
+			//assert
+			ct.IsCancellationRequested.Should().BeTrue();
+		}
+
+		[Theory, RvvmAutoData]
+		public void RefreshOn_WithOverlappingRefresh_ShouldReturnCorrectValue(
+		  [Frozen] ThrowingTestScheduler scheduler,
+			[Frozen]Subject<Unit> refreshOn,
+			object value)
+		{
+			//arrange
+			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
+			var i = 0;
+			var sut = new ObservableViewModel<object>(c =>
+			{
+				if (++i == 1)
+				{
+					refreshOn.OnNext(Unit.Default);
+				}
+				return Task.FromResult(value);
+			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable());
+			sut.Subscribe(observer);
+
+			//act
+			refreshOn.OnNext(Unit.Default);
+			scheduler.Start();
+
+			//assert
+			var expected = new ObservableViewModelNotification()
+			{
+				Status = ObservableViewModelStatus.Value,
+				Value = value
+			};
+			observer.Values().Last().ShouldBeEquivalentTo(expected);
 		}
 
 		[Theory, RvvmAutoData(emptyResult: true)]
