@@ -64,6 +64,7 @@
     <Compile Include="Diagnostics\PerformanceAsyncQueryBus.cs" />
     <Compile Include="Diagnostics\PerformanceAsyncCommandBus.cs" />
     <Compile Include="Diagnostics\PerformanceTime.cs" />
+    <Compile Include="EnumHelper.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
