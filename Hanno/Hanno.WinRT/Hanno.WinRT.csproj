@@ -62,8 +62,10 @@
     <Compile Include="Xaml\Converters\BoolToValueConverter.cs" />
     <Compile Include="Xaml\Converters\BoolToVisibility.cs" />
     <Compile Include="Xaml\Converters\CompositeConverter.cs" />
+    <Compile Include="Xaml\Converters\ConverterFromResources.cs" />
     <Compile Include="Xaml\Converters\LazyConverter.cs" />
     <Compile Include="Xaml\Converters\NullToVisibility.cs" />
+    <Compile Include="Xaml\Converters\ReverseBoolConverter.cs" />
     <Compile Include="Xaml\Converters\StringFormatConverter.cs" />
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\ViewViewModelBuilderExtensions.cs" />

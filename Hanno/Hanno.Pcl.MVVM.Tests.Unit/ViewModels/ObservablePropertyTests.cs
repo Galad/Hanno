@@ -101,5 +101,22 @@ namespace Hanno.Tests.ViewModels
 			//assert
 			actual.Should().Be(expected);
 		}
+
+		[Theory, RxAutoData]
+		public async Task OnNext_WhenSubscribingThenPushingFirstValue_AndFirstValueIsDefaultValue_ShouldReturnCorrectValue(
+			TestSchedulers schedulers)
+		{
+			//arrange
+			var observer = schedulers.CreateObserver<int>();
+			var sut = new ObservableProperty<int>(schedulers);
+			var expected = sut.Value;
+			sut.Subscribe(observer);
+			
+			//act
+			sut.OnNext(expected);
+
+			//assert
+			observer.Values().Last().Should().Be(expected);
+		}
 	}
 }

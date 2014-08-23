@@ -134,6 +134,7 @@ namespace Hanno.ViewModels
 				.SelectMany(n => viewModel.Take(1))
 				.Where(n => n.Status == ObservableViewModelStatus.Empty || n.Status == ObservableViewModelStatus.Error || n.Status == ObservableViewModelStatus.Initialized)
 				.SelectUnit()
+				.Merge(_refreshOn ?? Observable.Empty<Unit>())
 				.Do(_ => { }, e => { }, () => { })
 				.Subscribe(observer)
 				.DisposeWith(subscription);

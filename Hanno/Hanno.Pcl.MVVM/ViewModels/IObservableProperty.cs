@@ -31,11 +31,7 @@ namespace Hanno.ViewModels
 			get { return GetValue<T>(); }
 			set
 			{
-				lock (this)
-				{
-					_hasValue = true;
-					SetValue(value);
-				}
+				SetValueInternal(value);
 			}
 		}
 
@@ -59,10 +55,20 @@ namespace Hanno.ViewModels
 
 		public void OnNext(T value)
 		{
+			SetValueInternal(value);
+		}
+
+		void SetValueInternal(T value)
+		{
 			lock (this)
 			{
+				var shouldRaise = !_hasValue && EqualityComparer<T>.Default.Equals(value, Value);
 				_hasValue = true;
-				Value = value;
+				SetValue(value, "Value");
+				if (shouldRaise)
+				{
+					this.NotifyPropertyChanged("Value");
+				}
 			}
 		}
 
