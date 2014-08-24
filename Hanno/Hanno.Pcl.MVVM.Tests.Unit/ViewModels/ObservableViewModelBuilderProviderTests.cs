@@ -21,7 +21,7 @@ namespace Hanno.Tests.ViewModels
 		public void Customize(IFixture fixture)
 		{
 			fixture.Register<Func<Action<IObservableViewModel>, IScheduler, IScheduler, IObservableViewModelBuilder>>(() =>
-				((action, s1, s2) => new ObservableViewModelBuilder(action, s1, s2)));
+				((action, s1, s2) => new ObservableViewModelBuilder(action, s1, s2, fixture.Create<ISchedulers>())));
 		}
 	}
 

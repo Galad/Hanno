@@ -18,16 +18,19 @@ namespace Hanno.ViewModels
 		private readonly IScheduler _actionSelectionScheduler;
 		private readonly Action<IObservableViewModel> _saveViewModel;
 		private readonly IScheduler _dispatcherScheduler;
+		private readonly ISchedulers _schedulers;
 		public Func<CancellationToken, Task<TCollection>> Source { get; private set; }
 
-		public UpdatableObservableViewModelBuilderOptions(Action<IObservableViewModel> saveViewModel, Func<CancellationToken, Task<TCollection>> source, IScheduler actionSelectionScheduler, IScheduler dispatcherScheduler)
+		public UpdatableObservableViewModelBuilderOptions(Action<IObservableViewModel> saveViewModel, Func<CancellationToken, Task<TCollection>> source, IScheduler actionSelectionScheduler, IScheduler dispatcherScheduler, ISchedulers schedulers)
 		{
 			if (saveViewModel == null) throw new ArgumentNullException("saveViewModel");
 			if (source == null) throw new ArgumentNullException("source");
 			if (actionSelectionScheduler == null) throw new ArgumentNullException("actionSelectionScheduler");
 			if (dispatcherScheduler == null) throw new ArgumentNullException("dispatcherScheduler");
+			if (schedulers == null) throw new ArgumentNullException("schedulers");
 			_saveViewModel = saveViewModel;
 			_dispatcherScheduler = dispatcherScheduler;
+			_schedulers = schedulers;
 			_actionSelectionScheduler = actionSelectionScheduler;
 			Source = source;
 		}
@@ -39,7 +42,8 @@ namespace Hanno.ViewModels
 				Source,
 				notifications,
 				_actionSelectionScheduler,
-				_dispatcherScheduler
+				_dispatcherScheduler,
+				_schedulers
 				);
 		}
 	}
@@ -59,24 +63,28 @@ namespace Hanno.ViewModels
 		private IObservable<Unit> _refreshOn = Observable.Empty<Unit>();
 		private TimeSpan _timeout = TimeSpan.Zero;
 		private bool _refreshOnCollectionUpdateNotification;
+		private readonly ISchedulers _schedulers;
 
 		public UpdatableObservableViewModelBuilderOptions(
 			Action<IObservableViewModel> saveViewModel,
 			Func<CancellationToken, Task<TCollection>> source,
 			Func<IObservable<TNotification>> notifications,
 			IScheduler actionSelectionScheduler,
-			IScheduler dispatcherScheduler)
+			IScheduler dispatcherScheduler,
+			ISchedulers schedulers)
 		{
 			if (saveViewModel == null) throw new ArgumentNullException("saveViewModel");
 			if (source == null) throw new ArgumentNullException("source");
 			if (notifications == null) throw new ArgumentNullException("notifications");
 			if (actionSelectionScheduler == null) throw new ArgumentNullException("actionSelectionScheduler");
 			if (dispatcherScheduler == null) throw new ArgumentNullException("dispatcherScheduler");
+			if (schedulers == null) throw new ArgumentNullException("schedulers");
 			Source = source;
 			Notifications = notifications;
 			_saveViewModel = saveViewModel;
 			_actionSelectionScheduler = actionSelectionScheduler;
 			_dispatcherScheduler = dispatcherScheduler;
+			_schedulers = schedulers;
 		}
 
 		public IObservableViewModelBuilderOptions<ObservableCollection<T>> EmptyPredicate(Func<ObservableCollection<T>, bool> predicate)
@@ -118,7 +126,8 @@ namespace Hanno.ViewModels
 				_emptyPredicate,
 				subject ?? _refreshOn,
 				_timeout,
-				subscription);
+				subscription,
+				_schedulers);
 			if (_refreshOnCollectionUpdateNotification)
 			{
 				SubscribeToRefreshOnCollectionUpdateNotification(subscription, viewModel, subject);

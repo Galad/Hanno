@@ -19,7 +19,7 @@ namespace Hanno.Tests.ViewModels
 		[Theory, AutoData]
 		public async Task ViewModel_ShouldReturnCorrectValue(
 		  IFixture fixture,
-			TestScheduler scheduler)
+			TestSchedulers scheduler)
 		{
 			//arrange
 			const int insertionIndex = 5;
@@ -34,6 +34,7 @@ namespace Hanno.Tests.ViewModels
 				_ => { },
 				ct => Task.FromResult(initialList),
 				() => notifications,
+				scheduler,
 				scheduler,
 				scheduler)
 				.UpdateAction((i, o) => () => o.Insert(insertionIndex, i))
@@ -53,7 +54,7 @@ namespace Hanno.Tests.ViewModels
 		[Theory, AutoData]
 		public async Task ViewModel_WhenRefreshed_ShouldDisposePreviousNotificationsSubscriptions(
 		  IFixture fixture,
-			TestScheduler scheduler,
+			TestSchedulers scheduler,
 			int[] values)
 		{
 			//arrange
@@ -62,6 +63,7 @@ namespace Hanno.Tests.ViewModels
 				_ => { },
 				ct => Task.FromResult(values),
 				() => notifications,
+				scheduler,
 				scheduler,
 				scheduler)
 				.UpdateAction((i, o) => () => { })
@@ -86,7 +88,7 @@ namespace Hanno.Tests.ViewModels
 		AutoData]
 		public void ViewModel_WhenInitialized_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
 			IFixture fixture,
-			TestScheduler scheduler,
+			TestSchedulers scheduler,
 			int[] expectedValue)
 		{
 			//arrange
@@ -96,6 +98,7 @@ namespace Hanno.Tests.ViewModels
 				_ => { },
 				ct => Task.FromResult(expectedValue),
 				() => notifications,
+				scheduler,
 				scheduler,
 				scheduler)
 				.UpdateAction((i, o) => () => { })
@@ -119,7 +122,7 @@ namespace Hanno.Tests.ViewModels
 		AutoData]
 		public async Task ViewModel_WhenEmpty_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
 			IFixture fixture,
-			TestScheduler scheduler,
+			TestSchedulers scheduler,
 			int[] expectedValue)
 		{
 			//arrange
@@ -130,6 +133,7 @@ namespace Hanno.Tests.ViewModels
 				_ => { },
 				ct => Task.FromResult(expectedValue),
 				() => notifications,
+				scheduler,
 				scheduler,
 				scheduler)
 				.UpdateAction((i, o) => () => { })
@@ -150,7 +154,7 @@ namespace Hanno.Tests.ViewModels
 		AutoData]
 		public async Task ViewModel_WhenError_WithRefreshOnCollectionUpdateNotification_ShouldRefresh(
 			IFixture fixture,
-			TestScheduler scheduler,
+			TestSchedulers scheduler,
 			int[] expectedValue)
 		{
 			//arrange
@@ -167,6 +171,7 @@ namespace Hanno.Tests.ViewModels
 						return expectedValue;
 				},
 				() => notifications,
+				scheduler,
 				scheduler,
 				scheduler)
 				.UpdateAction((i, o) => () => { })

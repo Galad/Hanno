@@ -42,10 +42,11 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, AutoMoqData]
 		public void ToViewModel_ShouldReturnCorrectValue(
-			Task<object> value)
+			Task<object> value,
+			TestSchedulers scheduler)
 		{
 			//arrange
-			var sut = new ObservableViewModelBuilderOptions<object>(model => { }, ct => value);
+			var sut = new ObservableViewModelBuilderOptions<object>(model => { }, ct => value, scheduler);
 
 			//act
 			var actual = sut.ToViewModel();
@@ -92,11 +93,12 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, AutoMoqData]
 		public void ToViewModel_ShouldSaveViewModel(
-			Task<object> source)
+			Task<object> source,
+			TestSchedulers scheduler)
 		{
 			//arrange
 			IObservableViewModel viewModel = null;
-			var sut = new ObservableViewModelBuilderOptions<object>(model => viewModel = model, ct => source);
+			var sut = new ObservableViewModelBuilderOptions<object>(model => viewModel = model, ct => source, scheduler);
 
 			//act
 			var actual = sut.ToViewModel();

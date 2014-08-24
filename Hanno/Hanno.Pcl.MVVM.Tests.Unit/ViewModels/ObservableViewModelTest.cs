@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -20,7 +21,9 @@ using Xunit.Extensions;
 
 namespace Hanno.Tests.ViewModels
 {
+
 	#region Customization
+
 	public class RvvmCustomization : ICustomization
 	{
 		private readonly bool _emptyResult;
@@ -57,24 +60,29 @@ namespace Hanno.Tests.ViewModels
 					hasBeenRun = true;
 					return t;
 				},
-					o => _emptyResult, fixture.Create<IObservable<System.Reactive.Unit>>(), _timeout, new CompositeDisposable());
+					o => _emptyResult,
+					fixture.Create<IObservable<System.Reactive.Unit>>(),
+					_timeout,
+					new CompositeDisposable(),
+					fixture.Create<ISchedulers>());
 			});
 		}
 
 		private Task<T> GetValue<T>(IFixture fixture, bool hasBeenRun)
 		{
-			return Task.Run(async () =>
-				{
-					if (_timeout.TotalMilliseconds > 0)
-					{
-						await Task.Delay(_timeout.Add(TimeSpan.FromMilliseconds(10)));
-					}
-					if (_hasError && !hasBeenRun)
-					{
-						throw fixture.Create<Exception>();
-					}
-					return fixture.Create<T>();
-				});
+			if (_timeout.TotalMilliseconds > 0)
+			{
+				return Observable.Timer(_timeout.Add(TimeSpan.FromMilliseconds(10)), fixture.Create<IScheduler>())
+								 .Select(_ => fixture.Create<T>())
+				                 .ToTask();
+			}
+			if (_hasError && !hasBeenRun)
+			{
+				var tcs = new TaskCompletionSource<T>();
+				tcs.SetException(fixture.Create<Exception>());
+				return tcs.Task;
+			}
+			return Task.FromResult(fixture.Create<T>());
 		}
 	}
 
@@ -101,6 +109,7 @@ namespace Hanno.Tests.ViewModels
 		{
 		}
 	}
+
 	#endregion
 
 	public class ObservableViewModelTest
@@ -181,8 +190,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public void RefreshOn_ShouldRefresh(
-		  [Frozen] ThrowingTestScheduler scheduler,
-			[Frozen]Subject<Unit> refreshOn,
+			[Frozen] ThrowingTestScheduler scheduler,
+			[Frozen] Subject<Unit> refreshOn,
 			[Frozen] object value,
 			ObservableViewModel<object> sut)
 		{
@@ -191,7 +200,7 @@ namespace Hanno.Tests.ViewModels
 			sut.Subscribe(observer);
 
 			//act
-			refreshOn.OnNext(Unit.Default);
+			scheduler.Schedule(TimeSpan.FromTicks(201), () =>  refreshOn.OnNext(Unit.Default));
 			scheduler.Start();
 
 			//assert
@@ -205,8 +214,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public void RefreshOn_WithOverlappingRefresh_ShouldCancelPreviousTask(
-		  [Frozen] ThrowingTestScheduler scheduler,
-			[Frozen]Subject<Unit> refreshOn)
+			[Frozen] TestSchedulers scheduler,
+			[Frozen] Subject<Unit> refreshOn)
 		{
 			//arrange
 			CancellationToken ct = CancellationToken.None;
@@ -219,8 +228,8 @@ namespace Hanno.Tests.ViewModels
 					refreshOn.OnNext(Unit.Default);
 				}
 				return Task.FromResult(new object());
-			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable());
-			
+			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable(), scheduler);
+
 
 			//act
 			refreshOn.OnNext(Unit.Default);
@@ -232,8 +241,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public void RefreshOn_WithOverlappingRefresh_ShouldReturnCorrectValue(
-		  [Frozen] ThrowingTestScheduler scheduler,
-			[Frozen]Subject<Unit> refreshOn,
+			[Frozen] TestSchedulers scheduler,
+			[Frozen] Subject<Unit> refreshOn,
 			object value)
 		{
 			//arrange
@@ -246,7 +255,7 @@ namespace Hanno.Tests.ViewModels
 					refreshOn.OnNext(Unit.Default);
 				}
 				return Task.FromResult(value);
-			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable());
+			}, _ => false, refreshOn, TimeSpan.Zero, new CompositeDisposable(), scheduler);
 			sut.Subscribe(observer);
 
 			//act
@@ -278,7 +287,7 @@ namespace Hanno.Tests.ViewModels
 			observer.Completed().Should().HaveCount(1);
 		}
 
-		[Theory, RvvmAutoData(emptyResult: true, timeout: 1)]
+		[Theory, RvvmAutoData(emptyResult: true, timeout: 50)]
 		public async Task RefreshAsync_WithTimeout_ShouldThrow(
 			[Frozen] ThrowingTestScheduler scheduler,
 			ObservableViewModel<object> sut)
@@ -286,9 +295,11 @@ namespace Hanno.Tests.ViewModels
 			//arrange
 			var observer = scheduler.CreateObserver<ObservableViewModelNotification>();
 			sut.Subscribe(observer);
+			scheduler.Schedule(TimeSpan.FromTicks(201), () => sut.Refresh());
 
 			//act
-			await sut.RefreshAsync();
+			scheduler.Start();
+			//await sut.RefreshAsync();
 
 			//assert
 			var actual = observer.Values().ToArray();
@@ -392,8 +403,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public async Task ChainEmptyPredicate_WhenPredicateReturnsTrue_OvmStateShouldBeEmpty(
-			[Frozen]TestSchedulers schedulers,
-		  ObservableViewModel<object> sut)
+			[Frozen] TestSchedulers schedulers,
+			ObservableViewModel<object> sut)
 		{
 			//arrange
 			Func<object, bool> predicate = o => true;
@@ -410,8 +421,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public async Task ChainEmptyPredicate_WhenPredicateReturnsFalse_OvmStateShouldBeValue(
-			[Frozen]TestSchedulers schedulers,
-		  ObservableViewModel<object> sut)
+			[Frozen] TestSchedulers schedulers,
+			ObservableViewModel<object> sut)
 		{
 			//arrange
 			Func<object, bool> predicate = o => false;
@@ -428,8 +439,8 @@ namespace Hanno.Tests.ViewModels
 
 		[Theory, RvvmAutoData]
 		public async Task ChainEmptyPredicate_WithManyPredicatesAndWhenPredicateReturnsTrue_OvmStateShouldBeEmpty(
-			[Frozen]TestSchedulers schedulers,
-		  ObservableViewModel<object> sut)
+			[Frozen] TestSchedulers schedulers,
+			ObservableViewModel<object> sut)
 		{
 			//arrange
 			Func<object, bool> predicate1 = o => false;

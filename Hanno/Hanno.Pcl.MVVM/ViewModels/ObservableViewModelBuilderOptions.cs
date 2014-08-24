@@ -14,13 +14,16 @@ namespace Hanno.ViewModels
         private Func<T, bool> _emptyPredicate = arg => false;
         private IObservable<Unit> _refreshOn = Observable.Empty<Unit>();
 	    private TimeSpan _timeout = TimeSpan.Zero;
+	    private readonly ISchedulers _schedulers;
 
-	    public ObservableViewModelBuilderOptions(Action<IObservableViewModel> saveViewModel, Func<CancellationToken, Task<T>> source)
+	    public ObservableViewModelBuilderOptions(Action<IObservableViewModel> saveViewModel, Func<CancellationToken, Task<T>> source, ISchedulers schedulers)
         {
             if (saveViewModel == null) throw new ArgumentNullException("saveViewModel");
             if (source == null) throw new ArgumentNullException("source");
-            _saveViewModel = saveViewModel;
+		    if (schedulers == null) throw new ArgumentNullException("schedulers");
+		    _saveViewModel = saveViewModel;
             Source = source;
+		    _schedulers = schedulers;
         }
 
         public IObservableViewModelBuilderOptions<T> EmptyPredicate(Func<T, bool> predicate)
@@ -43,7 +46,7 @@ namespace Hanno.ViewModels
 
 	    public IObservableViewModel<T> ToViewModel()
 	    {
-		    var viewModel = new ObservableViewModel<T>(Source, _emptyPredicate, _refreshOn, _timeout, new CompositeDisposable());
+		    var viewModel = new ObservableViewModel<T>(Source, _emptyPredicate, _refreshOn, _timeout, new CompositeDisposable(), _schedulers);
             _saveViewModel(viewModel);
             return viewModel;
         }

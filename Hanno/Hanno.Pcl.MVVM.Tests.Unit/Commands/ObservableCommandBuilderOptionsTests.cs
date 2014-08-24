@@ -60,6 +60,26 @@ namespace Hanno.Tests.Commands
 		}
 
 		[Theory, RxAutoData]
+		public void ToCommand_WithoutCanExecute_ShouldReturnCorrectValue(
+			ObservableCommandBuilderOptions<string, object> sut)
+		{
+			//arrange
+
+			//act
+			var actual = sut.ToCommand();
+
+			//assert
+			actual.As<ObservableMvvmCommand<string, object>>()
+				  .CanExecuteStrategy
+				  .Should()
+				  .BeOfType<SingleExecutionCanExecuteStrategy<string>>()
+				  .Which
+				  .CanExecutePredicate(null)
+				  .Should()
+				  .BeTrue();
+		}
+
+		[Theory, RxAutoData]
 		public void ToCommand_WithCanExecuteOfT_ShouldReturnCorrectValue(
 			ObservableCommandBuilderOptions<string, object> sut)
 		{

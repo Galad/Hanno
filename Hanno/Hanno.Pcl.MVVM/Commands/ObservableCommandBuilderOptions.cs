@@ -68,7 +68,7 @@ namespace Hanno.Commands
 			ICanExecuteStrategy<TCommand> canExecuteStrategy;
 			if (CanExecutePredicate == null && ObservableCanExecute == null)
 			{
-				canExecuteStrategy = new AlwaysTrueCanExecuteStrategy<TCommand>();
+				canExecuteStrategy = new SingleExecutionCanExecuteStrategy<TCommand>(_ => true);
 			}
 			else if (CanExecutePredicate != null)
 			{

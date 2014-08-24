@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Hanno.Concurrency;
 
 namespace Hanno.ViewModels
 {
@@ -24,6 +25,7 @@ namespace Hanno.ViewModels
 		private readonly IConnectableObservable<ObservableViewModelNotification> _notificationsObservable;
 		private readonly IDisposable _notificationDisposable;
 		private readonly CompositeDisposable _subscriptions;
+		private readonly ISchedulers _schedulers;
 		private readonly SerialDisposable _currentExecution;
 
 		public ObservableViewModel(
@@ -31,13 +33,16 @@ namespace Hanno.ViewModels
 			Func<T, bool> emptyPredicate,
 			IObservable<Unit> refreshOn,
 			TimeSpan timeout,
-			CompositeDisposable subscriptions)
+			CompositeDisposable subscriptions,
+			ISchedulers schedulers)
 		{
 			if (sourceFactory == null) throw new ArgumentNullException("sourceFactory");
 			if (emptyPredicate == null) throw new ArgumentNullException("emptyPredicate");
 			if (refreshOn == null) throw new ArgumentNullException("refreshOn");
 			if (subscriptions == null) throw new ArgumentNullException("subscriptions");
+			if (schedulers == null) throw new ArgumentNullException("schedulers");
 			_subscriptions = subscriptions;
+			_schedulers = schedulers;
 			Source = sourceFactory;
 			EmptyPredicate = emptyPredicate;
 			RefreshOn = refreshOn;
@@ -79,7 +84,7 @@ namespace Hanno.ViewModels
 				{
 					if (TimeoutDelay > TimeSpan.Zero)
 					{
-						Observable.Timer(TimeoutDelay)
+						Observable.Timer(TimeoutDelay, _schedulers.ThreadPool.SchedulerFromPriority(SchedulerPriority.Low))
 						          .Subscribe(_ =>
 						          {
 							          cancelledFromTimeout = true;
