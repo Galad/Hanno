@@ -79,21 +79,6 @@ namespace Hanno.Tests.Commands
 			actual.Should().Be(expected);
 		}
 
-		[Theory, CommandBuilderProviderAutoData]
-		public void Get_CalledTwice_ShouldReturnCorrectValue(
-			string name,
-		  CommandBuilderProvider sut)
-		{
-			//arrange
-
-			//act
-			var expected = sut.Get(name).Execute(() => { }).ToCommand();
-			var actual = sut.Get(name).Execute(() => { }).ToCommand();
-
-			//assert
-			actual.Should().Be(expected);
-		}
-
 		[Theory, AutoMoqData]
 		public void Get_ShouldCallAccept(
 			string name,

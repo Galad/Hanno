@@ -9,7 +9,6 @@ namespace Hanno.Commands
 	{
 		private readonly ISchedulers _schedulers;
 		private readonly Func<Action<ICommand>, ISchedulers, string, ICommandBuilder> _builderFactory;
-		private readonly IDictionary<string, ICommand> _existingCommands = new Dictionary<string, ICommand>();
 		private readonly CompositeDisposable _disposable = new CompositeDisposable();
 		private readonly List<IMvvmCommandVisitor> _visitors;
 
@@ -30,30 +29,21 @@ namespace Hanno.Commands
 		public ICommandBuilder Get(string name)
 		{
 			if (name == null) throw new ArgumentNullException("name");
-			ICommandBuilder builder;
-			if (_existingCommands.ContainsKey(name))
+			var builder = _builderFactory(command =>
 			{
-				builder = new ExistingCommandBuilder(_existingCommands[name]);
-			}
-			else
-			{
-				builder = _builderFactory(command =>
+				var disposable = command as IDisposable;
+				if (disposable != null) disposable.DisposeWith(_disposable);
+				var mvvmCommand = command as IMvvmCommand;
+				if (mvvmCommand != null)
 				{
-					var disposable = command as IDisposable;
-					if (disposable != null) disposable.DisposeWith(_disposable);
-					_existingCommands[name] = command;
-					var mvvmCommand = command as IMvvmCommand;
-					if (mvvmCommand != null)
+					foreach (var mvvmCommandVisitor in _visitors)
 					{
-						foreach (var mvvmCommandVisitor in _visitors)
-						{
-							mvvmCommand.Accept(mvvmCommandVisitor);
-						}
+						mvvmCommand.Accept(mvvmCommandVisitor);
 					}
-				}, 
+				}
+			},
 				_schedulers,
 				name);
-			}
 			return builder;
 		}
 
@@ -73,7 +63,6 @@ namespace Hanno.Commands
 		public void Dispose()
 		{
 			_disposable.Dispose();
-			_existingCommands.Clear();
 		}
 	}
 }

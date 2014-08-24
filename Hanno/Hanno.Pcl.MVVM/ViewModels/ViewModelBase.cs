@@ -99,9 +99,10 @@ namespace Hanno.ViewModels
 			{
 				if (_ovmBuilderProvider == null)
 				{
-					_ovmBuilderProvider = new ObservableViewModelBuilderProvider(() => this, () => this.Services.Schedulers,
+					_ovmBuilderProvider = new ObservableViewModelBuilderProvider(
+						() => this.Services.Schedulers,
 						(action, s1, s2) => new ObservableViewModelBuilder(action, s1, s2, Services.Schedulers));
-					((ObservableViewModelBuilderProvider)_ovmBuilderProvider).DisposeWith(LongDisposables);
+					((ObservableViewModelBuilderProvider) _ovmBuilderProvider).DisposeWith(LongDisposables);
 				}
 				return _ovmBuilderProvider;
 			}

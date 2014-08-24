@@ -74,22 +74,6 @@ namespace Hanno.Tests.ViewModels
 			actual.Should().BeOfType<ObservableViewModelBuilder>();
 		}
 
-		[Theory, ObservableViewModelBuilderProviderAutoData]
-		public void Get_GettingABuilderTwice_ShouldReturnCorrectValue(
-		  ObservableViewModelBuilderProvider sut,
-			string name)
-		{
-			//arrange
-
-			//act
-			var vm = sut.Get(name).Execute(ct => Task.FromResult(new object())).ToViewModel();
-			var second = sut.Get(name);
-
-			//assert
-			second.Should().BeOfType<ExistingObservableViewModelBuilder>()
-				  .And.Match<ExistingObservableViewModelBuilder>(s => s.ViewModel == (IObservableViewModel)vm);
-		}
-
 		[Theory, AutoMoqData]
 		public void Get_ShouldCallAccept(
 			Mock<IObservableViewModelVisitor> visitor,
@@ -101,7 +85,7 @@ namespace Hanno.Tests.ViewModels
 		{
 			//arrange
 			Action<IObservableViewModel> action = null;
-			var sut = new ObservableViewModelBuilderProvider(() => parent, () => schedulers, (a, scheduler, arg3) =>
+			var sut = new ObservableViewModelBuilderProvider(() => schedulers, (a, scheduler, arg3) =>
 			{
 				action = a;
 				return ovmBuilder.Object;
