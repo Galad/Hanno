@@ -70,11 +70,7 @@ namespace Hanno.Diagnostics
 		{
 			if (Update != null)
 			{
-				//app crashes sometimes when the debugger is attached and we have a breakpoint
-				if (!Debugger.IsAttached)
-				{
-					GC.Collect();
-				}
+				GC.Collect();
 				var instances = _getInstances();
 				Update(this, new InstanceMonitoringEventArgs(instances));
 			}

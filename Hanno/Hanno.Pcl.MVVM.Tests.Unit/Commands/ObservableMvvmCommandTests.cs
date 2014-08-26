@@ -104,6 +104,7 @@ namespace Hanno.Tests.Commands
 				return value;
 			},
 			schedulers,
+			schedulers,
 			"name",
 			new AlwaysTrueCanExecuteStrategy<object>());
 
@@ -123,7 +124,7 @@ namespace Hanno.Tests.Commands
 			bool observableCalled = false;
 			var value = Observable.Return(Unit.Default, ImmediateScheduler.Instance)
 				.Do(unit => observableCalled = true);
-			var sut = new ObservableMvvmCommand<object, System.Reactive.Unit>(o => value, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, System.Reactive.Unit>(o => value, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			sut.Execute(null);
@@ -143,6 +144,7 @@ namespace Hanno.Tests.Commands
 			var value = Observable.Return(expected, ImmediateScheduler.Instance);
 			var sut = new ObservableMvvmCommand<object, object>(
 				o => value,
+				schedulers,
 				schedulers,
 				"name",
 				new AlwaysTrueCanExecuteStrategy<object>(),
@@ -167,6 +169,7 @@ namespace Hanno.Tests.Commands
 			var value = Observable.Throw<object>(expected, ImmediateScheduler.Instance);
 			var sut = new ObservableMvvmCommand<object, object>(
 				o => value,
+				schedulers,
 				schedulers,
 				"name",
 				new AlwaysTrueCanExecuteStrategy<object>(),
@@ -206,7 +209,7 @@ namespace Hanno.Tests.Commands
 		{
 			//arrange
 			var value = Observable.Return(obj, ImmediateScheduler.Instance);
-			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, "name", canExecute.Object);
+			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, schedulers, "name", canExecute.Object);
 
 			//act
 			sut.Execute(obj);
@@ -225,7 +228,7 @@ namespace Hanno.Tests.Commands
 		{
 			//arrange
 			var value = Observable.Throw<object>(error, ImmediateScheduler.Instance);
-			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, "name", canExecute.Object);
+			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, schedulers, "name", canExecute.Object);
 
 			//act
 			sut.Execute(obj);
@@ -248,7 +251,7 @@ namespace Hanno.Tests.Commands
 			{
 				throw new Exception();
 			};
-			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, "name", canExecute.Object, errorTask: errorTask);
+			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, schedulers, "name", canExecute.Object, errorTask: errorTask);
 
 			//act
 			sut.Execute(obj);
@@ -273,7 +276,7 @@ namespace Hanno.Tests.Commands
 				OnNext(30, value3),
 				OnCompleted(40, new object()));
 			var observer = scheduler.CreateObserver<object>();
-			var sut = new ObservableMvvmCommand<object, object>(o => observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), doObserver: () => observer, doScheduler: ImmediateScheduler.Instance);
+			var sut = new ObservableMvvmCommand<object, object>(o => observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), doObserver: () => observer, doScheduler: ImmediateScheduler.Instance);
 
 			//act
 			sut.Execute(null);
@@ -318,7 +321,7 @@ namespace Hanno.Tests.Commands
 			Exception actual = null;
 			var value = Observable.Throw<object>(expected, ImmediateScheduler.Instance);
 			Func<CancellationToken, Exception, Task> errorTask = async (ct, ex) => actual = ex;
-			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: errorTask);
+			var sut = new ObservableMvvmCommand<object, object>(_ => value, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: errorTask);
 
 			//act
 			sut.Execute(obj);
@@ -346,10 +349,10 @@ namespace Hanno.Tests.Commands
 		public void SetDefaultError_ShouldSetDefaultError(
 		  Func<CancellationToken, Exception, Task> error,
 			Func<object, IObservable<object>> observable,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			sut.SetDefaultError(error);
@@ -362,10 +365,10 @@ namespace Hanno.Tests.Commands
 		public void SetDefaultError_ShouldReturnTrue(
 		  Func<CancellationToken, Exception, Task> error,
 			Func<object, IObservable<object>> observable,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			var actual = sut.SetDefaultError(error);
@@ -387,10 +390,10 @@ namespace Hanno.Tests.Commands
 			Func<CancellationToken, Exception, Task> errorTask,
 			Func<CancellationToken, Exception, Task> expectedErrorTask,
 			Func<object, IObservable<object>> observable,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: expectedErrorTask);
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: expectedErrorTask);
 
 			//act
 			sut.SetDefaultError(errorTask);
@@ -404,10 +407,10 @@ namespace Hanno.Tests.Commands
 			Func<CancellationToken, Exception, Task> errorTask,
 			Func<CancellationToken, Exception, Task> expectedErrorTask,
 			Func<object, IObservable<object>> observable,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: expectedErrorTask);
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>(), errorTask: expectedErrorTask);
 
 			//act
 			var actual = sut.SetDefaultError(errorTask);
@@ -420,10 +423,10 @@ namespace Hanno.Tests.Commands
 		public void DecorateValueFactory_ShouldDecorateFactory(
 			Func<object, IObservable<object>> observable,
 			IObservable<object> expected,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			sut.DecorateValueFactory((_, __) => expected);
@@ -437,10 +440,10 @@ namespace Hanno.Tests.Commands
 		public void DecorateDoFactory_ShouldDecorateDo(
 			Func<object, IObservable<object>> observable,
 			IObserver<object> expected,
-			ISchedulers schedulers)
+			TestSchedulers schedulers)
 		{
 			//arrange
-			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, object>(observable, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			sut.DecorateDo(observer => expected);
@@ -475,7 +478,7 @@ namespace Hanno.Tests.Commands
 			var secondObservable = schedulers.CreateColdObservable(OnNext(400, new object()), OnNext(500, new object()));
 			var i = 0;
 			Func<object, IObservable<object>> observableFactory = _ => ++i == 1 ? firstObservable : secondObservable;
-			var sut = new ObservableMvvmCommand<object, object>(observableFactory, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
+			var sut = new ObservableMvvmCommand<object, object>(observableFactory, schedulers, schedulers, "name", new AlwaysTrueCanExecuteStrategy<object>());
 
 			//act
 			sut.Execute(null);

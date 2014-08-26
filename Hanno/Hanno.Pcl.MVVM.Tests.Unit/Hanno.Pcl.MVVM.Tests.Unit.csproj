@@ -93,7 +93,6 @@
     <Compile Include="Commands\CommandBuilderProviderTests.cs" />
     <Compile Include="Commands\CommandBuilderTests.cs" />
     <Compile Include="Commands\CommandTests.cs" />
-    <Compile Include="Commands\ExistingCommandBuilderTests.cs" />
     <Compile Include="Commands\MultipleExecutionCanExecuteStrategyTests.cs" />
     <Compile Include="Commands\MvvmCommandVisitors\DisplayMessageWhenErrorOccursVisitorTests.cs" />
     <Compile Include="Commands\ObservableCommandBuilderOptionsTests.cs" />

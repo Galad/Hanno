@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Windows.Input;
@@ -9,17 +10,18 @@ namespace Hanno.Commands
 	{
 		protected readonly string Name;
 		private readonly ICanExecuteStrategy<T> _canExecuteStrategy;
-		private IDisposable _disposable;
+		private readonly IDisposable _disposable;
 
 		protected CommandBase(ISchedulers schedulers, string name, ICanExecuteStrategy<T> canExecuteStrategy)
 		{
 			if (canExecuteStrategy == null) throw new ArgumentNullException("canExecuteStrategy");
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+			_disposable = new CompositeDisposable();
 			Name = name;
 			_canExecuteStrategy = canExecuteStrategy;
-			_canExecuteStrategy.CanExecuteChanged
-			                   .ObserveOn(schedulers.Dispatcher)
-			                   .Subscribe(b => RaiseCanExecute());
+			_disposable = _canExecuteStrategy.CanExecuteChanged
+			                                 .ObserveOn(schedulers.Dispatcher)
+			                                 .Subscribe(b => RaiseCanExecute());
 		}
 
 		public bool CanExecute(object parameter)

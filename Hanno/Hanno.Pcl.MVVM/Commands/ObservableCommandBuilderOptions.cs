@@ -20,6 +20,7 @@ namespace Hanno.Commands
 		public IScheduler DoScheduler { get; private set; }
 		public Func<CancellationToken, Exception, Task> ErrorTask { get; set; }
 		public bool IsMultipleExecution { get; private set; }
+		public IScheduler ExecutionScheduler { get; private set; }
 
 		public ObservableCommandBuilderOptions(Func<TCommand, IObservable<TObservable>> observable, Action<ICommand> saveAction, ISchedulers schedulers, string name)
 		{
@@ -62,6 +63,13 @@ namespace Hanno.Commands
 			return this;
 		}
 
+		public IObservableCommandBuilderOptions<TCommand, TObservable> ExecuteOnScheduler(IScheduler scheduler)
+		{
+			if (scheduler == null) throw new ArgumentNullException("scheduler");
+			ExecutionScheduler = scheduler;
+			return this;
+		}
+		
 		public ICommand ToCommand()
 		{
 			ICommand command;
@@ -90,6 +98,7 @@ namespace Hanno.Commands
 			command = new ObservableMvvmCommand<TCommand, TObservable>(
 				Observable,
 				_schedulers,
+				ExecutionScheduler ?? _schedulers.ThreadPool,
 				_name,
 				canExecuteStrategy,
 				DoObserver,

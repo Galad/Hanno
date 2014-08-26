@@ -22,11 +22,12 @@ namespace Hanno.Commands
 		private readonly SerialDisposable _executionDisposable;
 
 		protected readonly CompositeDisposable Disposables = new CompositeDisposable();
-		private readonly ISchedulers _schedulers;
+		private readonly IScheduler _executionScheduler;
 
 		public ObservableMvvmCommand(
 			Func<TCommand, IObservable<TObservable>> factory,
 			ISchedulers schedulers,
+			IScheduler  executionScheduler,
 			string name,
 			ICanExecuteStrategy<TCommand> canExecuteStrategy,
 			Func<IObserver<TObservable>> doObserver = null,
@@ -34,6 +35,7 @@ namespace Hanno.Commands
 			Func<CancellationToken, Exception, Task> errorTask = null)
 			: base(schedulers, name, canExecuteStrategy)
 		{
+			if (executionScheduler == null) throw new ArgumentNullException("executionScheduler");
 			Factory = factory;
 			if (errorTask == null)
 			{
@@ -49,15 +51,14 @@ namespace Hanno.Commands
 			ErrorTask = errorTask;
 			_isExecuting = new ReplaySubject<bool>(schedulers.ThreadPool);
 			_isExecuting.OnNext(false);
-			_schedulers = schedulers;
+			_executionScheduler = executionScheduler;
 			_executionDisposable = new SerialDisposable().DisposeWith(Disposables);
 		}
 
 		protected override void ExecuteOverride(TCommand parameter)
 		{
 			CanExecuteStrategy.NotifyExecuting(parameter);
-			_schedulers.ThreadPool
-			           .Schedule(default(object), (_, s) =>
+			_executionScheduler.Schedule(default(object), (_, s) =>
 				           Factory(parameter).ObserveOn(DoScheduler)
 				                             .Do(DoObserver())
 				                             .Catch((Exception ex) => HandleError(ex))

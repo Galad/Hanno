@@ -53,8 +53,6 @@
     <Compile Include="Commands\CommandBuilderOptions.cs" />
     <Compile Include="Commands\CommandBuilderProvider.cs" />
     <Compile Include="Commands\CommandWithObservableCanExecute.cs" />
-    <Compile Include="Commands\ExistingCommandBuilder.cs" />
-    <Compile Include="Commands\ExistingCommandBuilderOptions.cs" />
     <Compile Include="Commands\IAsyncMvvmCommand.cs" />
     <Compile Include="Commands\ICanExecuteStrategy.cs" />
     <Compile Include="Commands\ICommandBuilder.cs" />

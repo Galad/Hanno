@@ -14,6 +14,7 @@ namespace Hanno.Commands
 		public ObservableMvvmCommandWithObservableCanExecute(
 			Func<TCommand, IObservable<TObservable>> factory,
 			ISchedulers schedulers,
+			IScheduler executionScheduler,
 			string name,
 			IObservable<bool> observablePredicate,
 			ICanExecuteStrategy<TCommand> canExecuteStrategy,
@@ -23,6 +24,7 @@ namespace Hanno.Commands
 			: base(
 				factory,
 				schedulers,
+				executionScheduler,
 				name,
 				new ObserveCanExecuteStrategy<TCommand>(observablePredicate, canExecuteStrategy),
 				doObserver,
