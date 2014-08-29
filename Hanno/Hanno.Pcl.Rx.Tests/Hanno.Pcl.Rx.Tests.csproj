@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CqrsInfrastructure\CommandEventsTests.cs" />
+    <Compile Include="CqrsInfrastructure\NotifyCommandStateBusTests.cs" />
     <Compile Include="CqrsInfrastructure\NotifyEventsAsyncCommandBusTests.cs" />
     <Compile Include="DummyClass.cs" />
     <Compile Include="Extensions\DisposableExtensionsTests.cs" />

@@ -46,7 +46,8 @@ namespace TestUniversalApp.Composition
 				new InjectionFactory(c =>
 					new NotifyCommandStateBus(
 						new PerformanceAsyncCommandBus(
-							c.Resolve<AsyncCommandQueryBus>()))));
+							c.Resolve<AsyncCommandQueryBus>()),
+						c.Resolve<IScheduler>("ThreadPoolScheduler"))));
 
 			container.RegisterType<NotifyQueryStateBus>(
 				new ContainerControlledLifetimeManager(),
