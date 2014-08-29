@@ -176,6 +176,8 @@ namespace Hanno.MVVM.Navigation
 					//list to loaded / unloaded events
 					RegisterViewModelLoad(pageElement, viewModel);
 					RegisterViewModelUnload(pageElement, viewModel);
+
+					_navigatedSubject.OnNext(request);
 				}
 				finally
 				{
