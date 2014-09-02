@@ -83,6 +83,11 @@ namespace TestUniversalApp.Composition
 			container.RegisterType<IRuleProvider, UnityRuleProvider>(new ContainerControlledLifetimeManager());
 			container.RegisterType<IValidator, PropertyValidator>(new ContainerControlledLifetimeManager());
 			container.RegisterType<IMvvmCommandVisitor, DisplayMessageWhenErrorOccursVisitor>("sdff", new ContainerControlledLifetimeManager());
+			container.RegisterType<ICommandEvents, CommandEvents>(
+				new ContainerControlledLifetimeManager(),
+				new InjectionFactory(c => new CommandEvents()));
+			container.RegisterType<ICommandStateEvents, NotifyCommandStateBus>();
+			container.RegisterType<IQueryStateEvents, NotifyQueryStateBus>();
 		}
 
 		private class EmptyObservableRegistrationService : IObservableRegistrationService

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Command1Name" xml:space="preserve">
+    <value>Command test</value>
+  </data>
+  <data name="Command2Name" xml:space="preserve">
+    <value>Command test with flyout</value>
+  </data>
   <data name="Navigate_Error_Content" xml:space="preserve">
     <value>An error occurred while navigating</value>
   </data>

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using Windows.ApplicationModel;
@@ -79,6 +81,9 @@ namespace TestUniversalApp
 					);
 
 				composer.Register();
+				composer.Container.ResolveAll<IObservable<Unit>>()
+				        .Merge()
+				        .Subscribe(_ => { }, ex => { });
 
 				// TODO: change this value to a cache size that is appropriate for your application
 				rootFrame.CacheSize = 1;

@@ -9,5 +9,7 @@ namespace TestUniversalApp
 		public const string Main = "Main";
 		public const string Second = "Second";
 		public const string Third = "Third";
+		public const string SettingsCharm = "SettingsCharm";
+		public const string SettingsFlyoutTest = "SettingsFlyoutTest";
 	}
 }

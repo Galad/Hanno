@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Text;
 using Windows.System.Threading;
 using Windows.UI.Xaml.Controls;
+using Gaku.Views;
 using Hanno;
 using Hanno.Commands;
 using Hanno.Commands.MvvmCommandVisitors;
@@ -61,7 +63,31 @@ namespace TestUniversalApp.Composition
 					c.Resolve<IScheduler>("DispatcherScheduler"),
 					c.Resolve<IScheduler>("ThreadPoolHigh"))));
 			container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
+#if WINDOWS_APP
+			container.RegisterType<ISettingsCharmService, RegisterSettingsCharms<SettingsCharmViewModel>>(
+				new ContainerControlledLifetimeManager(),
+				new InjectionFactory(c =>
+					RegisterSettingsCharmCommands(new RegisterSettingsCharms<SettingsCharmViewModel>(
+						c.Resolve<IScheduler>("DispatcherScheduler"),
+						c.Resolve<IViewModelFactory>(),
+						c.Resolve<IResources>(),
+						ApplicationPages.SettingsCharm))));
+			container.RegisterType<IObservable<Unit>>(
+				"RegisterSettingsCharm",
+				new ContainerControlledLifetimeManager(),
+				new InjectionFactory(c => c.Resolve<RegisterSettingsCharms<SettingsCharmViewModel>>()));
+			container.RegisterType<IRequestNavigation>(
+				new ContainerControlledLifetimeManager(),
+				new InjectionFactory(c =>
+					RegisterSettingsFlyouts(new SettingsFlyoutNavigationRequest(
+						c.Resolve<NavigationService>(),
+						c.Resolve<IViewModelFactory>(),
+						c.Resolve<IScheduler>("DispatcherScheduler")))));
+#else
 			container.RegisterType<IRequestNavigation, NavigationService>(new ContainerControlledLifetimeManager());
+			
+#endif
+
 			container.RegisterType<IPageDefinitionRegistry, PageDefinitionRegistry>(
 				new ContainerControlledLifetimeManager(),
 				new InjectionFactory(unityContainer => RegisterPages(new PageDefinitionRegistry())));
@@ -84,6 +110,18 @@ namespace TestUniversalApp.Composition
 				new InjectionFactory(c => new AsyncMessageDialog(c.Resolve<IScheduler>("DispatcherScheduler"))));
 			container.RegisterType<IObservableViewModelVisitor, NullReferenceEmptyPredicateVisitor>("NullReferenceEmptyPredicate", new ContainerControlledLifetimeManager());
 			container.RegisterType<IObservableViewModelVisitor, EnumerableEmptyPredicateVisitor>("EnumerableEmptyPredicate", new ContainerControlledLifetimeManager());
+			container.RegisterType<IViewModelServices, ViewModelServices>(new ContainerControlledLifetimeManager());
+		}
+
+		private RegisterSettingsCharms<SettingsCharmViewModel> RegisterSettingsCharmCommands(RegisterSettingsCharms<SettingsCharmViewModel> settingsCharms)
+		{
+			return settingsCharms.AddCommand("Command1", "Command1Name", viewModel => viewModel.SettingCommand1)
+			                     .AddCommand("Command2", "Command2Name", viewModel => viewModel.SettingCommand2);
+		}
+
+		private SettingsFlyoutNavigationRequest RegisterSettingsFlyouts(SettingsFlyoutNavigationRequest settings)
+		{
+			return settings.RegisterFlyout<SettingsFlyoutTest, SettingsFlyoutTestViewModel>(ApplicationPages.SettingsFlyoutTest);
 		}
 
 		private IPageDefinitionRegistry RegisterPages(IPageDefinitionRegistry registry)
