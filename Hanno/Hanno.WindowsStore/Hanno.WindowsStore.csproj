@@ -114,6 +114,10 @@
       <Project>{d2d485cd-2ead-48ed-a8cd-abe6971c6d63}</Project>
       <Name>Hanno.Pcl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Hanno.WinRT\Hanno.WinRT.csproj">
+      <Project>{8e27b9f7-af62-4479-9a2e-0e834bb04dee}</Project>
+      <Name>Hanno.WinRT</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,11 +141,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Update.bat" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(ProjectDir)Update.bat"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

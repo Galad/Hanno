@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
@@ -40,6 +41,34 @@ namespace System.Reactive.Linq
 		    }
 		    replay.Connect().DisposeWith(disposables);
 		    return replay;
+	    }
+
+		/// <summary>
+		/// Apply a selector on the previous value produced by an observable and the current value
+		/// </summary>
+		/// <typeparam name="TSource">Type of the source</typeparam>
+		/// <typeparam name="TDelta">Type of the value returned by the delta selector</typeparam>
+		/// <param name="source">Observable source</param>
+		/// <param name="deltaSelector">Select the delta between the previous value and the current value.
+		/// The first parameter is the previous value.
+		/// The second parameter is the current value.</param>
+		/// <returns></returns>
+	    public static IObservable<TDelta> Delta<TSource, TDelta>(this IObservable<TSource> source, Func<TSource, TSource, TDelta> deltaSelector)
+	    {
+		    return source.Scan(new TSource[] {}, (previousValues, newValue) =>
+		    {
+			    if (previousValues.Length == 0)
+			    {
+				    return new[] {newValue};
+			    }
+			    if (previousValues.Length == 1)
+			    {
+				    return new[] {previousValues[0], newValue};
+			    }
+			    return new[] {previousValues[1], newValue};
+		    })
+		                 .Where(values => values.Length == 2)
+		                 .Select(values => deltaSelector(values[0], values[1]));
 	    }
     }
 }

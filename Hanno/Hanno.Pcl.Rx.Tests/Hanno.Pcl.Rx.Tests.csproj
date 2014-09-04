@@ -97,6 +97,7 @@
     <Compile Include="DummyClass.cs" />
     <Compile Include="Extensions\DisposableExtensionsTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
+    <Compile Include="Extensions\ObservableExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
