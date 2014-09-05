@@ -56,6 +56,7 @@
     <Compile Include="CqrsInfrastructure\IAsyncCommandHandler.cs" />
     <Compile Include="CqrsInfrastructure\IAsyncQueryBus.cs" />
     <Compile Include="CqrsInfrastructure\IAsyncQueryHandler.cs" />
+    <Compile Include="CqrsInfrastructure\ConcurrencyExecutionAsyncCommandBus.cs" />
     <Compile Include="CqrsInfrastructure\ParallelQueryHandler.cs" />
     <Compile Include="Diagnostics\DebuggerAsyncCommandBus.cs" />
     <Compile Include="Diagnostics\DebuggerAsyncQueryBus.cs" />
