@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace Hanno.Extensions
 {
@@ -12,5 +13,11 @@ namespace Hanno.Extensions
              }
              return typeof (T1).GetTypeInfo().IsAssignableFrom(obj.GetType().GetTypeInfo());
          }
+
+	    public static T DoAction<T>(this T obj, Action<T> doAction)
+	    {
+		    doAction(obj);
+		    return obj;
+	    }
     }
 }
