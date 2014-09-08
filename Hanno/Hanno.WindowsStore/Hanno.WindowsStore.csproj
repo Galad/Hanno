@@ -124,6 +124,8 @@
     <Compile Include="SettingsCharm\ISettingsCharmService.cs" />
     <Compile Include="SettingsCharm\RegisterSettingsCharms.cs" />
     <Compile Include="SettingsCharm\SettingsFlyoutNavigationRequest.cs" />
+    <Compile Include="Xaml\Controls\AppendToSearchSuggestionCollectionVisitor.cs" />
+    <Compile Include="Xaml\Controls\SearchBoxProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Core">
