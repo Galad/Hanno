@@ -26,8 +26,10 @@ namespace TestUniversalApp
 			Result2SuggestionCtrlCommand = GetResult2SuggestionCtrlCommand();
 			Result2SuggestionAltCommand = GetResult2SuggestionAltCommand();
 			DefaultCommand = GetDefaultCommand();
+			QuerySubmittedCommand = GetQuerySubmittedCommand();
 		}
 
+		public ICommand QuerySubmittedCommand { get; private set; }
 		public ICommand Result1SuggestionCtrlCommand { get; private set; }
 		public ICommand Result1SuggestionAltCommand { get; private set; }
 		public ICommand Result2SuggestionCtrlCommand { get; private set; }
@@ -70,6 +72,14 @@ namespace TestUniversalApp
 		{
 			return this.CommandBuilder("DefaultCommand")
 			           .Execute<string>(async (tag, ct) => await _messageDialog.Show(ct, "DefaultCommand", tag))
+			           .Error((token, exception) => Task.FromResult(true))
+			           .ToCommand();
+		}
+
+		public ICommand GetQuerySubmittedCommand()
+		{
+			return this.CommandBuilder("QuerySubmitted")
+			           .Execute<string>(async (query, ct) => await _messageDialog.Show(ct, "QuerySubmitted", query))
 			           .Error((token, exception) => Task.FromResult(true))
 			           .ToCommand();
 		}

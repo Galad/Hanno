@@ -21,7 +21,8 @@
 		<SearchBox VerticalAlignment="Top"
 				   HorizontalAlignment="Left"
 				   Margin="120,20,0,0"
-				   Width="300">
+				   Width="300"
+				   controls:SearchBoxProperties.QuerySubmittedCommand="{Binding QuerySubmittedCommand}">
 			<controls:SearchBoxProperties.ResultSuggestionChosenCommand>
 				<controls:ResultSuggestionCommands DefaultCommand="{Binding DefaultCommand}">
 					<controls:ResultSuggestionCommand KeyModifier="Control" CommandSelector="{StaticResource Result1CommandSelector}" Command="{Binding Result1SuggestionCtrlCommand}" />
