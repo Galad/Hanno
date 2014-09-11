@@ -9,7 +9,7 @@
     <ProjectGuid>{B19D6357-FF08-4040-977C-7676E1FF4AF2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hanno.WindowsStore</RootNamespace>
+    <RootNamespace>Hanno</RootNamespace>
     <AssemblyName>Hanno.WindowsStore</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
@@ -125,7 +125,13 @@
     <Compile Include="SettingsCharm\RegisterSettingsCharms.cs" />
     <Compile Include="SettingsCharm\SettingsFlyoutNavigationRequest.cs" />
     <Compile Include="Xaml\Controls\AppendToSearchSuggestionCollectionVisitor.cs" />
+    <Compile Include="Xaml\Controls\GuidRegexSearchResultCommandSelector.cs" />
+    <Compile Include="Xaml\Controls\ISearchResultCommandSelector.cs" />
+    <Compile Include="Xaml\Controls\RegexSearchResultCommandSelector.cs" />
+    <Compile Include="Xaml\Controls\ResultSuggestionCommand.cs" />
+    <Compile Include="Xaml\Controls\ResultSuggestionCommands.cs" />
     <Compile Include="Xaml\Controls\SearchBoxProperties.cs" />
+    <Compile Include="Xaml\Controls\VirtualKeyModifiers2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Reactive.Core">

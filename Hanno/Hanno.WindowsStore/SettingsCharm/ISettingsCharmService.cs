@@ -1,4 +1,4 @@
-namespace Gaku.Views
+namespace Hanno.SettingsCharm
 {
 	public interface ISettingsCharmService
 	{

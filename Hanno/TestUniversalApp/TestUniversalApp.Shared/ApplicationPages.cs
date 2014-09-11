@@ -6,6 +6,7 @@ namespace TestUniversalApp
 {
 	public class ApplicationPages
 	{
+		public const string TestSearch = "TestSearch";
 		public const string Main = "Main";
 		public const string Second = "Second";
 		public const string Third = "Third";

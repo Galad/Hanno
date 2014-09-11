@@ -4,15 +4,14 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.UI.ApplicationSettings;
-using Windows.UI.Xaml;
 using Hanno.Globalization;
 using Hanno.Navigation;
 using Hanno.ViewModels;
-using System.Windows.Input;
 
-namespace Gaku.Views
+namespace Hanno.SettingsCharm
 {
 	/// <summary>
 	/// Register settings charms commands

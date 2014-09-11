@@ -23,6 +23,7 @@
 		<StackPanel>
 			<Button Content="Test" HorizontalAlignment="Stretch" VerticalAlignment="Center"
 					Command="{Binding Navigate}"/>
+			<Button Content="Test search" Command="{Binding TestSearch}" />
 			<!--<Button Command="{Binding TestEntityConverter}" Content="TestEntityConverter" />-->
 		</StackPanel>
 	</Grid>

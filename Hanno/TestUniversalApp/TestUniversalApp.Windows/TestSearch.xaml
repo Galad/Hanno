@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="TestUniversalApp.TestSearch"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestUniversalApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Hanno.Xaml.Controls"
+    mc:Ignorable="d">
+	
+	<Page.Resources>
+		<controls:GuidRegexSearchResultCommandSelector x:Key="Result1CommandSelector"
+													   CanHandleTagPattern="Result1,.*" 
+													   SelectTagPattern="Result1,(.*)" />
+		<controls:GuidRegexSearchResultCommandSelector x:Key="Result2CommandSelector"
+													   CanHandleTagPattern="Result2,.*" 
+													   SelectTagPattern="Result2,(.*)" />
+	</Page.Resources>
+
+	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+		<SearchBox VerticalAlignment="Top"
+				   HorizontalAlignment="Left"
+				   Margin="120,20,0,0"
+				   Width="300">
+			<controls:SearchBoxProperties.ResultSuggestionChosenCommand>
+				<controls:ResultSuggestionCommands DefaultCommand="{Binding DefaultCommand}">
+					<controls:ResultSuggestionCommand KeyModifier="Control" CommandSelector="{StaticResource Result1CommandSelector}" Command="{Binding Result1SuggestionCtrlCommand}" />
+					<controls:ResultSuggestionCommand KeyModifier="Shift" CommandSelector="{StaticResource Result1CommandSelector}" Command="{Binding Result1SuggestionAltCommand}" />
+					<controls:ResultSuggestionCommand KeyModifier="Control" CommandSelector="{StaticResource Result2CommandSelector}"  Command="{Binding Result2SuggestionCtrlCommand}"/>
+					<controls:ResultSuggestionCommand KeyModifier="Shift" CommandSelector="{StaticResource Result2CommandSelector}"  Command="{Binding Result2SuggestionAltCommand}"/>
+				</controls:ResultSuggestionCommands>
+			</controls:SearchBoxProperties.ResultSuggestionChosenCommand>
+			<controls:SearchBoxProperties.Provider>
+				<local:SearchResultProvider />
+			</controls:SearchBoxProperties.Provider>
+		</SearchBox>
+	</Grid>
+</Page>

@@ -22,7 +22,8 @@ namespace TestUniversalApp
 	{
 		private readonly IEntityBuilder _entityBuilder;
 
-		public MainViewModel(IViewModelServices services, IEntityBuilder entityBuilder) : base(services)
+		public MainViewModel(IViewModelServices services, IEntityBuilder entityBuilder)
+			: base(services)
 		{
 			if (entityBuilder == null) throw new ArgumentNullException("entityBuilder");
 			_entityBuilder = entityBuilder;
@@ -34,6 +35,17 @@ namespace TestUniversalApp
 			{
 				return this.CommandBuilder()
 						   .Execute(ct => this.Services.RequestNavigation.Navigate(ct, ApplicationPages.Second))
+						   .ToCommand();
+			}
+		}
+
+		public ICommand TestSearch
+		{
+			get
+			{
+				return this.CommandBuilder()
+						   .Execute(ct => this.Services.RequestNavigation.Navigate(ct, ApplicationPages.TestSearch))
+						   .Error((token, exception) => Task.FromResult(true))
 						   .ToCommand();
 			}
 		}
@@ -55,16 +67,16 @@ namespace TestUniversalApp
 			{
 				var r = new Random();
 				return this.OvmBuilderProvider
-				           .Get("TestUpdatable")
-				           .ExecuteUpdatable(ct => Task.FromResult(new int[] {1, 50, 60}), 0)
-				           .UpdateOn(() => Observable.Timer(TimeSpan.FromMilliseconds(10), TimeSpan.FromMilliseconds(10)).TakeUntil(DateTimeOffset.Now.AddSeconds(10)).Select(l => r.Next(0, 9999)))
-				           .UpdateAction(
-					           (i, ints) =>
-					           {
-						           var ii = r.Next(0, ints.Count - 1);
-						           return () => ints.Insert(ii, i);
-					           })
-				           .ToViewModel();
+						   .Get("TestUpdatable")
+						   .ExecuteUpdatable(ct => Task.FromResult(new int[] { 1, 50, 60 }), 0)
+						   .UpdateOn(() => Observable.Timer(TimeSpan.FromMilliseconds(10), TimeSpan.FromMilliseconds(10)).TakeUntil(DateTimeOffset.Now.AddSeconds(10)).Select(l => r.Next(0, 9999)))
+						   .UpdateAction(
+							   (i, ints) =>
+							   {
+								   var ii = r.Next(0, ints.Count - 1);
+								   return () => ints.Insert(ii, i);
+							   })
+						   .ToViewModel();
 			}
 		}
 
@@ -76,7 +88,7 @@ namespace TestUniversalApp
 						   .Get()
 						   .Execute(() =>
 						   {
-							   var a = new ClassA() {Test = "bla"};
+							   var a = new ClassA() { Test = "bla" };
 							   var e = new EntityConverter();
 							   var sw = Stopwatch.StartNew();
 							   var b = _entityBuilder.BuildFrom<ClassA, ClassB>(a);

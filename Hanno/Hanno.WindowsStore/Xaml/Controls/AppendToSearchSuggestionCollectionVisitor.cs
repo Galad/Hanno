@@ -2,7 +2,7 @@
 using Windows.ApplicationModel.Search;
 using Hanno.Search;
 
-namespace Hanno.WindowsStore.Xaml.Controls
+namespace Hanno.Xaml.Controls
 {
 	public sealed class AppendToSearchSuggestionCollectionVisitor : ISearchResultVisitor
 	{

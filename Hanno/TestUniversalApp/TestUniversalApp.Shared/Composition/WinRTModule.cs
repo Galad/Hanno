@@ -5,7 +5,6 @@ using System.Reactive.Concurrency;
 using System.Text;
 using Windows.System.Threading;
 using Windows.UI.Xaml.Controls;
-using Gaku.Views;
 using Hanno;
 using Hanno.Commands;
 using Hanno.Commands.MvvmCommandVisitors;
@@ -19,6 +18,9 @@ using Hanno.Services;
 using Hanno.ViewModels;
 using Microsoft.Practices.Unity;
 using TestUniversalApp.Composition.Factories;
+#if WINDOWS_APP
+using Hanno.SettingsCharm;
+#endif
 
 namespace TestUniversalApp.Composition
 {
@@ -113,22 +115,28 @@ namespace TestUniversalApp.Composition
 			container.RegisterType<IViewModelServices, ViewModelServices>(new ContainerControlledLifetimeManager());
 		}
 
+#if WINDOWS_APP
 		private RegisterSettingsCharms<SettingsCharmViewModel> RegisterSettingsCharmCommands(RegisterSettingsCharms<SettingsCharmViewModel> settingsCharms)
 		{
 			return settingsCharms.AddCommand("Command1", "Command1Name", viewModel => viewModel.SettingCommand1)
-			                     .AddCommand("Command2", "Command2Name", viewModel => viewModel.SettingCommand2);
+								 .AddCommand("Command2", "Command2Name", viewModel => viewModel.SettingCommand2);
 		}
 
 		private SettingsFlyoutNavigationRequest RegisterSettingsFlyouts(SettingsFlyoutNavigationRequest settings)
 		{
 			return settings.RegisterFlyout<SettingsFlyoutTest, SettingsFlyoutTestViewModel>(ApplicationPages.SettingsFlyoutTest);
-		}
+		} 
+#endif
 
 		private IPageDefinitionRegistry RegisterPages(IPageDefinitionRegistry registry)
 		{
 			return registry.RegisterViewModel<MainViewModel, MainPage>(ApplicationPages.Main)
-						   .RegisterViewModel<SecondViewModel, SecondPage>(ApplicationPages.Second)
-						   .RegisterViewModel<ThirdViewModel, ThirdPage>(ApplicationPages.Third);
+			               .RegisterViewModel<SecondViewModel, SecondPage>(ApplicationPages.Second)
+			               .RegisterViewModel<ThirdViewModel, ThirdPage>(ApplicationPages.Third)
+#if WINDOWS_APP
+			               .RegisterViewModel<TestSearchViewModel, TestSearch>(ApplicationPages.TestSearch)
+#endif
+				;
 		}
 	}
 }

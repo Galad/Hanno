@@ -106,11 +106,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchResultProvider.cs" />
     <Compile Include="SettingsCharmViewModel.cs" />
     <Compile Include="SettingsFlyoutTest.xaml.cs">
       <DependentUpon>SettingsFlyoutTest.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsFlyoutTestViewModel.cs" />
+    <Compile Include="TestSearch.xaml.cs">
+      <DependentUpon>TestSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestSearchViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -185,6 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="SettingsFlyoutTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

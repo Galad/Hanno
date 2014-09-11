@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Hanno.Navigation;
 using Hanno.ViewModels;
 
-namespace Gaku.Views
+namespace Hanno.SettingsCharm
 {
 	/// <summary>
 	/// Decorator of IRequestNavigation. Handle page navigations using a setting flyout

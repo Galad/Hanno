@@ -31,6 +31,9 @@ namespace TestUniversalApp.Composition
 			container.RegisterViewModel((c, s) => new MainViewModel(s, c.Resolve<IEntityBuilder>()));
 			container.RegisterViewModel((c, s) => new SecondViewModel(s));
 			container.RegisterViewModel((c, s) => new ThirdViewModel(s));
+#if WINDOWS_APP
+			container.RegisterViewModel((c, s) => new TestSearchViewModel(s, c.Resolve<IAsyncMessageDialog>())); 
+#endif
 			container.RegisterType<ISerializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringSerializer(new XmlSerializer())));
 			container.RegisterType<IDeserializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringDeserializer(new XmlSerializer())));
 			container.RegisterType<IScheduler>("ThreadPoolScheduler", new ContainerControlledLifetimeManager(), new InjectionFactory(c => ThreadPoolScheduler.Default));
