@@ -35,6 +35,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cache\CacheAsyncQueryBus.cs" />
+    <Compile Include="Cache\CachedAsyncQueryBase.cs" />
+    <Compile Include="Cache\CacheEntry.cs" />
+    <Compile Include="Cache\CacheService.cs" />
+    <Compile Include="Cache\ICacheInfos.cs" />
+    <Compile Include="Cache\ICacheService.cs" />
+    <Compile Include="Cache\IInvalidateCache.cs" />
+    <Compile Include="Cache\ICacheEntryRepository.cs" />
+    <Compile Include="Cache\InvalidateCacheService.cs" />
+    <Compile Include="Cache\MemoryCacheEntryRepository.cs" />
     <Compile Include="Collection\DoubleList.cs" />
     <Compile Include="ComparerHelper.cs" />
     <Compile Include="CqrsInfrastructure\AsyncCommandQueryBus.cs" />
@@ -72,6 +82,7 @@
     <Compile Include="Globalization\IResources.cs" />
     <Compile Include="IEntityBuilder.cs" />
     <Compile Include="IInitializable.cs" />
+    <Compile Include="INow.cs" />
     <Compile Include="IO\Compression\ICompressionService.cs" />
     <Compile Include="IO\FileAccess.cs" />
     <Compile Include="IO\FileMode.cs" />

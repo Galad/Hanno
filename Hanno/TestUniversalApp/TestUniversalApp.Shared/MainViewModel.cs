@@ -100,6 +100,18 @@ namespace TestUniversalApp
 			}
 		}
 
+		public ICommand TestCache
+		{
+			get
+			{
+				return this.CommandBuilderProvider
+				           .Get()
+				           .Execute(async (ct) => await Services.RequestNavigation.Navigate(ct, ApplicationPages.TestCache))
+				           .Error((token, exception) => Task.FromResult(true))
+				           .ToCommand();
+			}
+		}
+
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();

@@ -35,6 +35,10 @@
       <DependentUpon>SecondPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)SecondViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestCachePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TestCachePage.xaml.cs">
+      <DependentUpon>TestCachePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ThirdPage.xaml.cs">
       <DependentUpon>ThirdPage.xaml</DependentUpon>
     </Compile>
@@ -46,6 +50,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)SecondPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)TestCachePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

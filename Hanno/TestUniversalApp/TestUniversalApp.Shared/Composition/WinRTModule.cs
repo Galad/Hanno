@@ -133,6 +133,7 @@ namespace TestUniversalApp.Composition
 			return registry.RegisterViewModel<MainViewModel, MainPage>(ApplicationPages.Main)
 			               .RegisterViewModel<SecondViewModel, SecondPage>(ApplicationPages.Second)
 			               .RegisterViewModel<ThirdViewModel, ThirdPage>(ApplicationPages.Third)
+			               .RegisterViewModel<TestCachePageViewModel, TestCachePage>(ApplicationPages.TestCache)
 #if WINDOWS_APP
 			               .RegisterViewModel<TestSearchViewModel, TestSearch>(ApplicationPages.TestSearch)
 #endif

@@ -24,6 +24,7 @@
 			<Button Content="Test" HorizontalAlignment="Stretch" VerticalAlignment="Center"
 					Command="{Binding Navigate}"/>
 			<Button Content="Test search" Command="{Binding TestSearch}" />
+			<Button Content="Test cache" Command="{Binding TestCache}" />
 			<!--<Button Command="{Binding TestEntityConverter}" Content="TestEntityConverter" />-->
 		</StackPanel>
 	</Grid>

@@ -91,6 +91,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\AsyncStorageCacheServiceTests.cs" />
+    <Compile Include="Cache\CacheAsyncQueryBusTests.cs" />
     <Compile Include="Collections\DoubleListTests.cs" />
     <Compile Include="ComparerHelperTests.cs" />
     <Compile Include="CqrsInfrastructure\AsyncCommandBaseTests.cs" />

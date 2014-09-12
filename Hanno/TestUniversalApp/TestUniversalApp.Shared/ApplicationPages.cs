@@ -12,5 +12,6 @@ namespace TestUniversalApp
 		public const string Third = "Third";
 		public const string SettingsCharm = "SettingsCharm";
 		public const string SettingsFlyoutTest = "SettingsFlyoutTest";
+		public const string TestCache = "TestCache";
 	}
 }

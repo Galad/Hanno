@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="TestUniversalApp.TestCachePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TestUniversalApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Margin="120,120,0,0">
+		<TextBox Header="Query" x:Name="QueryTextBox" />
+		<TextBox Text="{Binding CacheAge, Mode=TwoWay}" />
+		<Button Content="Search"
+				CommandParameter="{Binding Text, ElementName=QueryTextBox}"
+				Command="{Binding TestQueryCommand}"/>
+		<Button Content="Search with cache"
+				CommandParameter="{Binding Text, ElementName=QueryTextBox}"
+				Command="{Binding TestQueryCommandWithCache}"/>
+		<Button Content="Invalidate cache"
+				CommandParameter="{Binding Text, ElementName=QueryTextBox}"
+				Command="{Binding InvalidateCache}"/>
+	</StackPanel>
+</Page>

@@ -31,6 +31,7 @@ namespace TestUniversalApp.Composition
 			container.RegisterViewModel((c, s) => new MainViewModel(s, c.Resolve<IEntityBuilder>()));
 			container.RegisterViewModel((c, s) => new SecondViewModel(s));
 			container.RegisterViewModel((c, s) => new ThirdViewModel(s));
+			container.RegisterViewModel((c, s) => new TestCachePageViewModel(s));
 #if WINDOWS_APP
 			container.RegisterViewModel((c, s) => new TestSearchViewModel(s, c.Resolve<IAsyncMessageDialog>())); 
 #endif

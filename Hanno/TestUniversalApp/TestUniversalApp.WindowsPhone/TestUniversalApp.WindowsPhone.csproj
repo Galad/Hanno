@@ -134,6 +134,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Hanno.Pcl.Http\Hanno.Pcl.Http.csproj">
+      <Project>{7ce4feb5-c348-4296-9cb2-9af01a335828}</Project>
+      <Name>Hanno.Pcl.Http</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Hanno.Pcl.MVVM\Hanno.Pcl.MVVM.csproj">
       <Project>{b7b7c861-3c9d-4e1f-ab07-3f60fb4a181b}</Project>
       <Name>Hanno.Pcl.MVVM</Name>
