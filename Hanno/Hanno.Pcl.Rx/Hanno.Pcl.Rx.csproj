@@ -47,6 +47,7 @@
     <Compile Include="CqrsInfrastructure\NotifyEventsAsyncCommandBus.cs" />
     <Compile Include="CqrsInfrastructure\NotifyQueryStateBus.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\NotifyCollectionChangedExtensions.cs" />
     <Compile Include="Extensions\ObserverDecorator.cs" />
     <Compile Include="Extensions\SchedulerExtensions.cs" />
     <Compile Include="Extensions\DisposableExtensions.cs" />
