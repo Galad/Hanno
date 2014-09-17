@@ -6,7 +6,6 @@ namespace Hanno.Commands
 {
 	public interface IAsyncMvvmCommand
 	{
-		IObservable<bool> IsExecuting { get; }
 		Func<CancellationToken, Exception, Task> ErrorTask { get; }
 		bool SetDefaultError(Func<CancellationToken, Exception, Task> errorTask);
 		string Name { get; }

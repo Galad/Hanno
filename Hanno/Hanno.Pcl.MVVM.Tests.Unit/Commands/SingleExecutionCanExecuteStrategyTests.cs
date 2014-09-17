@@ -64,6 +64,13 @@ namespace Hanno.Tests.Commands
 			sut.Should().BeAssignableTo<ICanExecuteStrategy<object>>();
 		}
 
+		[Theory, AutoData]
+		public void Sut_IsDisposable(
+			SingleExecutionCanExecuteStrategy<object> sut)
+		{
+			sut.Should().BeAssignableTo<IDisposable>();
+		}
+
 		[Theory,
 		AutoData
 		]

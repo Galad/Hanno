@@ -55,7 +55,7 @@ namespace Hanno.Commands
 			}
 		}
 
-		#region
+		#region Dispose
 
 		public void Dispose()
 		{

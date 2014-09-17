@@ -16,7 +16,6 @@ namespace Hanno.Commands
 		{
 			if (canExecuteStrategy == null) throw new ArgumentNullException("canExecuteStrategy");
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
-			_disposable = new CompositeDisposable();
 			Name = name;
 			_canExecuteStrategy = canExecuteStrategy;
 			_disposable = _canExecuteStrategy.CanExecuteChanged
@@ -47,9 +46,41 @@ namespace Hanno.Commands
 			}
 		}
 
-		public virtual void Dispose()
+
+		#region Dispose
+		public void Dispose()
 		{
-			_disposable.Dispose();
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
 		}
+
+		public virtual void Dispose(bool disposing)
+		{
+			if (_isDisposed)
+			{
+				return;
+			}
+
+			if (disposing)
+			{
+				//Add disposition of managed resources here
+				_disposable.Dispose();
+				_canExecuteStrategy.Dispose();
+			}
+
+			//Add disposition of unmanaged resources here
+
+			_isDisposed = true;
+		}
+
+		~CommandBase()
+		{
+			this.Dispose(false);
+		}
+
+		private bool _isDisposed; 
+		#endregion
+
+
 	}
 }

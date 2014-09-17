@@ -8,9 +8,6 @@ namespace Hanno.Commands
 {
 	public class ObservableMvvmCommandWithObservableCanExecute<TCommand, TObservable> : ObservableMvvmCommand<TCommand, TObservable>
 	{
-		public IObservable<bool> ObservablePredicate { get; private set; }
-		private bool _canExecuteFromObservable = true;
-
 		public ObservableMvvmCommandWithObservableCanExecute(
 			Func<TCommand, IObservable<TObservable>> factory,
 			ISchedulers schedulers,
