@@ -18,7 +18,6 @@ namespace Hanno.Commands
 		public IScheduler DoScheduler { get; private set; }
 		public Func<CancellationToken, Exception, Task> ErrorTask { get; private set; }
 		private readonly bool _hasDefaultErrorTask = false;
-		private readonly ReplaySubject<bool> _isExecuting;
 		private readonly SerialDisposable _executionDisposable;
 
 		protected readonly CompositeDisposable Disposables = new CompositeDisposable();
@@ -49,8 +48,6 @@ namespace Hanno.Commands
 			DoObserver = doObserver;
 			DoScheduler = doScheduler ?? schedulers.Immediate;
 			ErrorTask = errorTask;
-			_isExecuting = new ReplaySubject<bool>(schedulers.ThreadPool);
-			_isExecuting.OnNext(false);
 			_executionScheduler = executionScheduler;
 			_executionDisposable = new SerialDisposable().DisposeWith(Disposables);
 		}
@@ -75,9 +72,9 @@ namespace Hanno.Commands
 			});
 		}
 
-		public override void Dispose()
+		public override void Dispose(bool isDisposing)
 		{
-			base.Dispose();
+			base.Dispose(isDisposing);
 			Disposables.Dispose();
 		}
 
@@ -112,11 +109,6 @@ namespace Hanno.Commands
 			if (factoryDecorator == null) throw new ArgumentNullException("factoryDecorator");
 			var decorated = DoObserver;
 			DoObserver = () => factoryDecorator(decorated());
-		}
-
-		public IObservable<bool> IsExecuting
-		{
-			get { return _isExecuting; }
 		}
 	}
 }
