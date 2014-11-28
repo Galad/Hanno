@@ -24,11 +24,11 @@ namespace Hanno.Tests.Cache
 		{
 			fixture.Customize<Mock<ICacheEntryRepository>>(c => c.Do(mock =>
 			{
-				mock.Setup(r => r.AddOrUpdate(It.IsAny<CacheEntry<AsyncStorageCacheServiceTests.TestCacheReturnValue>>()))
+				mock.Setup(r => r.AddOrUpdate(CancellationToken.None, It.IsAny<CacheEntry<AsyncStorageCacheServiceTests.TestCacheReturnValue>>()))
 					.ReturnsDefaultTask();
-				mock.Setup(r => r.Remove(It.IsAny<Guid>()))
+				mock.Setup(r => r.Remove<AsyncStorageCacheServiceTests.TestCacheReturnValue>(CancellationToken.None, It.IsAny<string>(), It.IsAny<Guid>()))
 					.ReturnsDefaultTask();
-				mock.Setup(r => r.Get<AsyncStorageCacheServiceTests.TestCacheReturnValue>(It.IsAny<string>(), It.IsAny<IDictionary<string, string>>()))
+				mock.Setup(r => r.Get<AsyncStorageCacheServiceTests.TestCacheReturnValue>(It.IsAny<CancellationToken>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>()))
 					.ReturnsDefaultTask();
 			}));
 			var now = fixture.Freeze<DateTimeOffset>();
@@ -91,7 +91,7 @@ namespace Hanno.Tests.Cache
 			TestCacheReturnValue expected)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(default(CacheEntry<TestCacheReturnValue>));
 
 			//act
@@ -109,9 +109,9 @@ namespace Hanno.Tests.Cache
 			TestCacheReturnValue expected)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(default(CacheEntry<TestCacheReturnValue>));
-			cacheEntryRepo.Setup(c => c.AddOrUpdate(It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
+			cacheEntryRepo.Setup(c => c.AddOrUpdate(CancellationToken.None, It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
 				entry.CacheKey == key && entry.Value == expected)))
 			              .ReturnsDefaultTask()
 			              .Verifiable();
@@ -133,7 +133,7 @@ namespace Hanno.Tests.Cache
 			DateTimeOffset now)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(Guid.NewGuid(), key, new Dictionary<string, string>(), now, expected));
 
 			//act
@@ -154,7 +154,7 @@ namespace Hanno.Tests.Cache
 		{
 			//arrange
 			NowContext.SetContext(new FuncNow(() => now));
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(
 				              Guid.NewGuid(),
 				              key,
@@ -180,7 +180,7 @@ namespace Hanno.Tests.Cache
 			Guid id)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(
 				              id,
 				              key,
@@ -192,7 +192,7 @@ namespace Hanno.Tests.Cache
 			await sut.ExecuteWithCache(CancellationToken.None, key, () => Task.FromResult(expected), TimeSpan.FromMinutes(5));
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(id));
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, id));
 		}
 
 		[Theory, CacheServiceAutoData]
@@ -206,14 +206,14 @@ namespace Hanno.Tests.Cache
 			Guid id)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(
 				              id,
 				              key,
 				              new Dictionary<string, string>(),
 				              now.Subtract(TimeSpan.FromMinutes(10)),
 				              notExpected));
-			cacheEntryRepo.Setup(c => c.AddOrUpdate(It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
+			cacheEntryRepo.Setup(c => c.AddOrUpdate(CancellationToken.None, It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
 				entry.CacheKey == key &&
 				entry.Value == expected &&
 				entry.Attributes.Count == 0)))
@@ -238,9 +238,9 @@ namespace Hanno.Tests.Cache
 			Dictionary<string, string> attributes)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, attributes))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, attributes))
 			              .ReturnsTask(default(CacheEntry<TestCacheReturnValue>));
-			cacheEntryRepo.Setup(c => c.AddOrUpdate(It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
+			cacheEntryRepo.Setup(c => c.AddOrUpdate(CancellationToken.None, It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
 				entry.CacheKey == key && entry.Value == expected && entry.Attributes == attributes)))
 			              .ReturnsDefaultTask()
 			              .Verifiable();
@@ -263,7 +263,7 @@ namespace Hanno.Tests.Cache
 			Dictionary<string, string> attributes)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, attributes))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, attributes))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(Guid.NewGuid(), key, attributes, now, expected));
 
 			//act
@@ -285,14 +285,14 @@ namespace Hanno.Tests.Cache
 			Dictionary<string, string> attributes)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, attributes))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, attributes))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(
 				              id,
 				              key,
 				              new Dictionary<string, string>(),
 				              now.Subtract(TimeSpan.FromMinutes(10)),
 				              notExpected));
-			cacheEntryRepo.Setup(c => c.AddOrUpdate(It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
+			cacheEntryRepo.Setup(c => c.AddOrUpdate(CancellationToken.None, It.Is<CacheEntry<TestCacheReturnValue>>(entry =>
 				entry.CacheKey == key &&
 				entry.Value == expected &&
 				entry.Attributes == attributes)))
@@ -319,7 +319,7 @@ namespace Hanno.Tests.Cache
 			TestCacheReturnValue notExpected)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(default(CacheEntry<TestCacheReturnValue>));
 
 
@@ -346,7 +346,7 @@ namespace Hanno.Tests.Cache
 			Dictionary<string, string> attributes)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, attributes))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, attributes))
 			              .ReturnsTask(default(CacheEntry<TestCacheReturnValue>));
 
 
@@ -373,14 +373,14 @@ namespace Hanno.Tests.Cache
 			CacheEntry<TestCacheReturnValue> entry)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(entry);
 
 			//act
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key);
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(entry.Id));
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id));
 		}
 
 		[Theory, CacheServiceAutoData]
@@ -392,14 +392,14 @@ namespace Hanno.Tests.Cache
 			Dictionary<string,string> attributes)
 		{
 			//arrange
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, attributes))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, attributes))
 			              .ReturnsTask(entry);
 
 			//act
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key, attributes);
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(entry.Id));
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id));
 		}
 
 		[Theory, CacheServiceAutoData]
@@ -412,14 +412,14 @@ namespace Hanno.Tests.Cache
 		{
 			//arrange
 			var entry = new CacheEntry<TestCacheReturnValue>(Guid.NewGuid(), key, new Dictionary<string, string>(), now.Subtract(TimeSpan.FromMinutes(10)), value);
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 						  .ReturnsTask(entry);
 
 			//act
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key, TimeSpan.FromMinutes(5));
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(entry.Id));
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id));
 		}
 
 		[Theory, CacheServiceAutoData]
@@ -432,14 +432,14 @@ namespace Hanno.Tests.Cache
 		{
 			//arrange
 			var entry = new CacheEntry<TestCacheReturnValue>(Guid.NewGuid(), key, new Dictionary<string, string>(), now.Subtract(TimeSpan.FromMinutes(2)), value);
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 						  .ReturnsTask(entry);
 
 			//act
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key, TimeSpan.FromMinutes(5));
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(entry.Id), Times.Never());
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id), Times.Never());
 		}
 
 
@@ -453,14 +453,14 @@ namespace Hanno.Tests.Cache
 		{
 			//arrange
 			var entry = new CacheEntry<TestCacheReturnValue>(Guid.NewGuid(), key, new Dictionary<string, string>(), now.Subtract(TimeSpan.FromMinutes(2)), value);
-			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
-						  .ReturnsTask(entry);
+			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
+			              .ReturnsTask(entry);
 
 			//act
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key, TimeSpan.FromMinutes(2));
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove(entry.Id), Times.Never());
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id), Times.Never());
 		}
 	}
 }

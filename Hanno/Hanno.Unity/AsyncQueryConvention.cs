@@ -20,20 +20,30 @@ namespace Hanno.Unity
 		public override IEnumerable<Type> GetTypes()
 		{
 			return AllClasses.FromAssemblies(_assemblies)
-							 .Select(Type => new { Type, TypeInfo = Type.GetTypeInfo() })
-							 .Where(t =>
-							 {
-								 return t.TypeInfo
-								         .ImplementedInterfaces
-								         .Where(type1 => type1.GenericTypeArguments.Any())
-								         .Select(type1 => new {Type = type1, TypeDefinition = type1.GetGenericTypeDefinition()})
-								         .Any(type1 => type1.TypeDefinition == typeof (IAsyncQueryHandler<,>) &&
-								                       t.TypeInfo.Assembly != typeof (IAsyncQueryHandler<,>).GetTypeInfo().Assembly &&
-								                       !t.TypeInfo.IsAbstract &&
-								                       t.TypeInfo.IsPublic &&
-								                       t.TypeInfo.DeclaredConstructors.Count() == 1);
-							 })
-							 .Select(t => t.Type);
+			                 .Select(Type => new {Type, TypeInfo = Type.GetTypeInfo()})
+			                 .SelectMany(t =>
+			                 {
+				                 return t.TypeInfo
+				                         .ImplementedInterfaces
+				                         .Where(type1 => type1.GenericTypeArguments.Any())
+				                         .Select(type1 => new {Type = type1, TypeDefinition = type1.GetGenericTypeDefinition()})
+				                         .Where(type1 => type1.TypeDefinition == typeof (IAsyncQueryHandler<,>))
+				                         .Select(type1 => new
+				                         {
+					                         ImplementedInterface = type1.Type,
+					                         Type = t.Type,
+					                         TypeInfo = t.TypeInfo
+				                         });
+			                 })
+			                 .GroupBy(t => t.ImplementedInterface)
+			                 .Where(g => g.Count() == 1)
+			                 .SelectMany(g => g)
+			                 .Where(t =>
+				                 t.TypeInfo.Assembly != typeof (IAsyncQueryHandler<,>).GetTypeInfo().Assembly &&
+				                 !t.TypeInfo.IsAbstract &&
+				                 t.TypeInfo.IsPublic &&
+				                 t.TypeInfo.DeclaredConstructors.Count() == 1)
+			                 .Select(t => t.Type);
 		}
 
 		public override Func<Type, IEnumerable<Type>> GetFromTypes()

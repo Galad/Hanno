@@ -25,7 +25,8 @@ namespace Hanno.Storage
 			IDeserializer deserializer,
 			IAsyncFileOperations fileOperations,
 			IAsyncDirectoryOperations directoryOperations,
-			string databasePath)
+			string databasePath,
+			string folderName = null)
 		{
 			if (serializer == null) throw new ArgumentNullException("serializer");
 			if (deserializer == null) throw new ArgumentNullException("deserializer");
@@ -37,7 +38,7 @@ namespace Hanno.Storage
 			_fileOperations = fileOperations;
 			_directoryOperations = directoryOperations;
 			_databasePath = databasePath;
-			_fullName = typeof(TValue).FullName;
+			_fullName = folderName ?? typeof (TValue).FullName;
 		}
 
 		public async Task<TValue> Get(TKey key)

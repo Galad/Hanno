@@ -61,7 +61,7 @@ namespace Hanno.Cache
 			semaphore.Semaphore.Release();
 			try
 			{
-				var result = await ExecuteWithCacheInternal(cacheKey, execute, maxAge, attributes);
+				var result = await ExecuteWithCacheInternal(ct, cacheKey, execute, maxAge, attributes);
 				taskCompletionSource.SetResult(result);
 				return result;
 			}
@@ -101,9 +101,9 @@ namespace Hanno.Cache
 			}
 		}
 
-		private async Task<T> ExecuteWithCacheInternal<T>(string cacheKey, Func<Task<T>> execute, TimeSpan maxAge, IDictionary<string, string> attributes)
+		private async Task<T> ExecuteWithCacheInternal<T>(CancellationToken ct, string cacheKey, Func<Task<T>> execute, TimeSpan maxAge, IDictionary<string, string> attributes)
 		{
-			var existingEntry = await _cacheEntryRepository.Get<T>(cacheKey, attributes);
+			var existingEntry = await _cacheEntryRepository.Get<T>(ct, cacheKey, attributes);
 			if (existingEntry == null)
 			{
 				var result = await execute();
@@ -114,7 +114,7 @@ namespace Hanno.Cache
 			if (existingEntry.DateCreated.Add(maxAge) < now)
 			{
 				var result = await execute();
-				await _cacheEntryRepository.Remove(existingEntry.Id);
+				await _cacheEntryRepository.Remove<T>(CancellationToken.None, cacheKey, existingEntry.Id);
 				await AddNewCacheEntry(cacheKey, attributes, result);
 				return result;
 			}
@@ -165,25 +165,25 @@ namespace Hanno.Cache
 		private async Task AddNewCacheEntry<T>(string cacheKey, IDictionary<string, string> attributes, T result)
 		{
 			var entry = new CacheEntry<T>(Guid.NewGuid(), cacheKey, attributes ?? new Dictionary<string, string>(), NowContext.Current.Now, result);
-			await _cacheEntryRepository.AddOrUpdate(entry);
+			await _cacheEntryRepository.AddOrUpdate(CancellationToken.None, entry);
 		}
 
 		public async Task Invalidate<T>(CancellationToken ct, string cacheKey, IDictionary<string, string> attributes = null)
 		{
-			var entry = await _cacheEntryRepository.Get<T>(cacheKey, attributes ?? new Dictionary<string, string>());
+			var entry = await _cacheEntryRepository.Get<T>(ct, cacheKey, attributes ?? new Dictionary<string, string>());
 			if (entry != null)
 			{
-				await _cacheEntryRepository.Remove(entry.Id);
+				await _cacheEntryRepository.Remove<T>(CancellationToken.None, cacheKey, entry.Id);
 			}
 		}
 
 		public async Task Invalidate<T>(CancellationToken ct, string cacheKey, TimeSpan minAge, IDictionary<string, string> attributes = null)
 		{
-			var entry = await _cacheEntryRepository.Get<T>(cacheKey, attributes ?? new Dictionary<string, string>());
+			var entry = await _cacheEntryRepository.Get<T>(ct, cacheKey, attributes ?? new Dictionary<string, string>());
 			var now = NowContext.Current.Now;
 			if (entry != null && entry.DateCreated.Add(minAge) < now)
 			{
-				await _cacheEntryRepository.Remove(entry.Id);
+				await _cacheEntryRepository.Remove<T>(CancellationToken.None, cacheKey, entry.Id);
 			}
 		}
 	}
