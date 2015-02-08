@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Struik.AutoFixture.AutoMoq.AutoSetup</name>
+    </assembly>
+    <members>
+        <member name="T:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras.SetupMockWithInterface(System.Type,System.Object,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            </summary>
+            <param name="requestType"></param>
+            <param name="result"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras.SetupMockWithInterfaceGeneric``1(``0,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            
+            </summary>
+            <param name="result"></param>
+            <param name="context"></param>
+            <typeparam name="TType"></typeparam>
+        </member>
+        <member name="M:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras.SetupAsGenericAction``1(System.Reflection.MethodInfo,Moq.Mock{``0})">
+            <summary>
+            
+            </summary>
+            <param name="method"></param>
+            <param name="mock"></param>
+            <typeparam name="TMock"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras.SetupAsGenericFunc``2(System.Reflection.MethodInfo,Moq.Mock{``0})">
+            <summary>
+            
+            </summary>
+            <param name="method"></param>
+            <param name="mock"></param>
+            <typeparam name="TMock"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Struik.AutoFixture.AutoMoq.AutoSetup.MockRelayExtras.SetupReturnsAsGenericFunc``2(Moq.Language.Flow.ISetup{``0,``1},Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            
+            </summary>
+            <param name="setup"></param>
+            <param name="context"></param>
+            <typeparam name="TMock"></typeparam>
+            <typeparam name="TResult"></typeparam>
+        </member>
+    </members>
+</doc>

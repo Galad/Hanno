@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Concurrency;
+using Hanno.Concurrency;
 
 namespace Hanno.Rx
 {
@@ -24,7 +25,23 @@ namespace Hanno.Rx
 
 	    public IScheduler CurrentThread { get { return CurrentThreadScheduler.Instance; } }
 
-        void ISchedulers.SafeDispatch(Action action)
+		IPriorityScheduler ISchedulers.ThreadPool
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		IPriorityScheduler ISchedulers.Dispatcher
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		void ISchedulers.SafeDispatch(Action action)
         {
             if (_dispatcher.Dispatcher.CheckAccess())
             {
