@@ -40,9 +40,9 @@ namespace Ploeh.AutoFixture.Idioms
 		/// <typeparam name="T"></typeparam>
 		/// <param name="assertion"></param>
 		/// <param name="actions"></param>
-	    public static void VerifyConstructor<T>(this IIdiomaticAssertion assertion)
+	    public static void VerifyConstructors<T>(this IIdiomaticAssertion assertion)
 		{
-			var constructor = typeof (T).GetConstructors().First();
+			var constructor = typeof (T).GetConstructors();
 			assertion.Verify(constructor);
 		}
 

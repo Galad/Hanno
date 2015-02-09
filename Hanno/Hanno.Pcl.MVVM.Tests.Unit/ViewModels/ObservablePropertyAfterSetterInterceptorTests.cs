@@ -25,7 +25,7 @@ namespace Hanno.Tests.ViewModels
 		public void Sut_ConstructorGuardClauses(
 			GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<ObservablePropertyAfterSetterInterceptor<object>>();
+			assertion.VerifyConstructors<ObservablePropertyAfterSetterInterceptor<object>>();
 		}
 
 		[Theory, AutoMoqData]

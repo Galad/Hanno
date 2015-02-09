@@ -68,7 +68,7 @@ namespace Hanno.Tests.Commands
 		public void Sut_VerifyGuardClauses(
 		  GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<MultipleExecutionCanExecuteStrategy<object>>();
+			assertion.VerifyConstructors<MultipleExecutionCanExecuteStrategy<object>>();
 		}
 
 		[Theory, AutoData]

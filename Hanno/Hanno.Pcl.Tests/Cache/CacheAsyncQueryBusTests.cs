@@ -29,7 +29,7 @@ namespace Hanno.Tests.Cache
 		public void Sut_TestGuardClauses(
 		  GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<CacheAsyncQueryBus>();
+			assertion.VerifyConstructors<CacheAsyncQueryBus>();
 		}
 
 		[Theory, AutoMoqData]

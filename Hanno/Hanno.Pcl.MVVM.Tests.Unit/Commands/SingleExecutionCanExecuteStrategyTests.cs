@@ -228,7 +228,7 @@ namespace Hanno.Tests.Commands
 		public void Sut_ConstructorGuardClauses(
 			GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<SingleExecutionCanExecuteStrategy<object>>();
+			assertion.VerifyConstructors<SingleExecutionCanExecuteStrategy<object>>();
 		}
 	}
 }

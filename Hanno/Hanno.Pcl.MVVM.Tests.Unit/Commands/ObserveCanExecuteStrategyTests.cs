@@ -64,7 +64,7 @@ namespace Hanno.Tests.Commands
 			//arrange
 
 			//act
-			assertion.VerifyConstructor<ObserveCanExecuteStrategy<object>>();
+			assertion.VerifyConstructors<ObserveCanExecuteStrategy<object>>();
 
 			//assert
 		}

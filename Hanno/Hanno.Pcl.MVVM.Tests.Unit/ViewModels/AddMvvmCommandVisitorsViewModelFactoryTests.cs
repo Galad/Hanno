@@ -24,7 +24,7 @@ namespace Hanno.Tests.ViewModels
 		public void Sut_TestConstructorGuadClauses(
 			GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<AddMvvmVisitorsViewModelFactory>();
+			assertion.VerifyConstructors<AddMvvmVisitorsViewModelFactory>();
 		}
 
 		[Theory, AutoMoqData]

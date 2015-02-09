@@ -80,7 +80,7 @@ namespace Hanno.Tests.Cache
 		public void Sut_TestGuardClauses(
 			GuardClauseAssertion assertion)
 		{
-			assertion.VerifyConstructor<CacheService>();
+			assertion.VerifyConstructors<CacheService>();
 		}
 
 		[Theory, CacheServiceAutoData]

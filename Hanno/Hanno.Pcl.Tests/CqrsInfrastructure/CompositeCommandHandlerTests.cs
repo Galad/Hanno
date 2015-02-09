@@ -41,7 +41,7 @@ namespace Hanno.Tests.CqrsInfrastructure
 		public void Constructor_GuardClauses(
 			GuardClauseAssertion assertions)
 		{
-			assertions.VerifyConstructor<CompositeCommandHandler<TestCommand>>();
+			assertions.VerifyConstructors<CompositeCommandHandler<TestCommand>>();
 		}
 	}
 }
