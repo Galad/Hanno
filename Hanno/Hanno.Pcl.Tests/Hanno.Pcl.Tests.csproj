@@ -107,20 +107,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\AsyncStorageCacheServiceTests.cs" />
     <Compile Include="Cache\CacheAsyncQueryBusTests.cs" />
+    <Compile Include="Cache\CacheEntryTests.cs" />
     <Compile Include="Collections\DoubleListTests.cs" />
     <Compile Include="ComparerHelperTests.cs" />
     <Compile Include="CqrsInfrastructure\AsyncCommandBaseTests.cs" />
     <Compile Include="CqrsInfrastructure\AsyncCommandQueryBusTests.cs" />
     <Compile Include="CqrsInfrastructure\AsyncQueryBaseTests.cs" />
     <Compile Include="CqrsInfrastructure\CompositeCommandHandlerTests.cs" />
+    <Compile Include="CqrsInfrastructure\ConcurrencyExecutionAsyncCommandBusTests.cs" />
     <Compile Include="CqrsInfrastructure\DelegateCommandHandlerTests.cs" />
     <Compile Include="CqrsInfrastructure\DelegateQueryHandlerTests.cs" />
+    <Compile Include="CqrsInfrastructure\EnumerableArrayResultAsyncQueryTests.cs" />
+    <Compile Include="CqrsInfrastructure\EnumerableAsyncCommandTests.cs" />
     <Compile Include="Diagnostics\StopwatchCompareTests.cs" />
     <Compile Include="EnumHelperTests.cs" />
     <Compile Include="Extensions\FrameworkExtensionsTests.cs" />
-    <Compile Include="LocalAddin.cs" />
     <Compile Include="NowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\AsyncFromStringKeyValuePairFilesDataTableTests.cs" />
@@ -139,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="Cache\CacheServiceTests.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

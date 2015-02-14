@@ -13,7 +13,7 @@ using Xunit.Extensions;
 
 namespace Hanno.Tests
 {
-	public class NowContextTests
+	public class NowContextTests : IDisposable
 	{
 		[Theory, AutoData]
 		public void Current_ShouldBeUtcNow()
@@ -36,6 +36,11 @@ namespace Hanno.Tests
 		{
 			Assert.Throws<ArgumentNullException>(() => NowContext.SetContext(null));
 		}
+
+		public void Dispose()
+		{
+			NowContext.ResetToDefault();
+ 		}
 	}
 
 	public class FuncNowTests

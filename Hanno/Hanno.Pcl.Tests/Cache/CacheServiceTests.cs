@@ -24,11 +24,11 @@ namespace Hanno.Tests.Cache
 		{
 			fixture.Customize<Mock<ICacheEntryRepository>>(c => c.Do(mock =>
 			{
-				mock.Setup(r => r.AddOrUpdate(CancellationToken.None, It.IsAny<CacheEntry<AsyncStorageCacheServiceTests.TestCacheReturnValue>>()))
+				mock.Setup(r => r.AddOrUpdate(CancellationToken.None, It.IsAny<CacheEntry<CacheServiceTests.TestCacheReturnValue>>()))
 					.ReturnsDefaultTask();
-				mock.Setup(r => r.Remove<AsyncStorageCacheServiceTests.TestCacheReturnValue>(CancellationToken.None, It.IsAny<string>(), It.IsAny<Guid>()))
+				mock.Setup(r => r.Remove<CacheServiceTests.TestCacheReturnValue>(CancellationToken.None, It.IsAny<string>(), It.IsAny<Guid>()))
 					.ReturnsDefaultTask();
-				mock.Setup(r => r.Get<AsyncStorageCacheServiceTests.TestCacheReturnValue>(It.IsAny<CancellationToken>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>()))
+				mock.Setup(r => r.Get<CacheServiceTests.TestCacheReturnValue>(It.IsAny<CancellationToken>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>()))
 					.ReturnsDefaultTask();
 			}));
 			var now = fixture.Freeze<DateTimeOffset>();
@@ -61,7 +61,7 @@ namespace Hanno.Tests.Cache
 	}
 	#endregion
 
-	public class AsyncStorageCacheServiceTests
+	public class CacheServiceTests
 	{
 		public class TestCacheReturnValue
 		{

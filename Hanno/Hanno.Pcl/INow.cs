@@ -13,7 +13,7 @@ namespace Hanno
 
 		static NowContext()
 		{
-			_now = new SystemUtcNow();
+			ResetToDefault();
 		}
 
 		public static INow Current
@@ -25,6 +25,11 @@ namespace Hanno
 		{
 			if (now == null) throw new ArgumentNullException("now");
 			_now = now;
+		}
+
+		public static void ResetToDefault()
+		{
+			_now = new SystemUtcNow();
 		}
 	}
 

@@ -16,6 +16,10 @@ namespace Hanno.CqrsInfrastructure
 	{
 	}
 
+	/// <summary>
+	/// Todo: To remove, since it violates CQS
+	/// </summary>
+	/// <typeparam name="TResult"></typeparam>
 	public class AsyncCommandWithResult<TResult>
 	{
 		public AsyncCommandWithResult()

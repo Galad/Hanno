@@ -28,11 +28,7 @@ namespace Hanno.CqrsInfrastructure
 
 		public void NotifyEvent<TCommand, TValue>(TCommand command, TValue eventValue) where TCommand : IAsyncCommandEvent<TValue>
 		{
-			_eventSubject.OnNext(new CommandEventArgs()
-			{
-				Command = command,
-				Value = eventValue
-			});
+			_eventSubject.OnNext(new CommandEventArgs(command, eventValue));			
 		}
 
 		public IObservable<TValue> ObserveCommandEvents<TCommand, TValue>(TCommand command) where TCommand : IAsyncCommandEvent<TValue>

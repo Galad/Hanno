@@ -16,10 +16,19 @@ namespace Hanno.CqrsInfrastructure
 			_innerCommandBus = innerCommandBus;
 		}
 
-		public async Task ProcessCommand<TCommand>(TCommand command) where TCommand : IAsyncCommand
+		public Task ProcessCommand<TCommand>(TCommand command) where TCommand : IAsyncCommand
+		{
+			if (command == null)
+			{
+				throw new ArgumentNullException("command");
+			}
+			return ProcessCommandInternal(command);
+		}
+
+		private async Task ProcessCommandInternal<TCommand>(TCommand command) where TCommand : IAsyncCommand
 		{
 			SemaphoreSlim semaphoreSlim;
-			if (_commandTypes.TryGetValue(typeof (TCommand), out semaphoreSlim))
+			if (_commandTypes.TryGetValue(typeof(TCommand), out semaphoreSlim))
 			{
 				await semaphoreSlim.WaitAsync(command.CancellationToken);
 				try
@@ -35,10 +44,9 @@ namespace Hanno.CqrsInfrastructure
 			{
 				await _innerCommandBus.ProcessCommand(command);
 			}
-
 		}
 
-		public ConcurrencyExecutionAsyncCommandBus ForCommand<T>(int maximumConcurrentCommands) where T : IAsyncCommand
+		public ConcurrencyExecutionAsyncCommandBus ForCommand<T>(ushort maximumConcurrentCommands) where T : IAsyncCommand
 		{
 			_commandTypes.Add(typeof (T), new SemaphoreSlim(maximumConcurrentCommands, maximumConcurrentCommands));
 			return this;
