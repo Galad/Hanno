@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hanno.Extensions
-{
-    public static class ListExtensions
-    {
-        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
-        {
-            if (list == null) throw new ArgumentNullException("list");
-            if (items == null) throw new ArgumentNullException("items");
-            foreach (var item in items)
-            {
-                list.Add(item);
-            }
-        }
-    }
+namespace System.Linq
+{	
+	public static class EnumerableExtensions
+	{
+		public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+		{
+			if (source == null) throw new ArgumentNullException("source");
+			if (action == null) throw new ArgumentNullException("action");
+			return source.Select(i =>
+			{
+				action(i);
+				return i;
+			});
+		}
+	}
 }

@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cache\AsyncStorageCacheEntryRepository.cs" />
     <Compile Include="Cache\CacheAsyncQueryBus.cs" />
     <Compile Include="Cache\CachedAsyncQueryBase.cs" />
     <Compile Include="Cache\CacheEntry.cs" />
@@ -78,7 +79,9 @@
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="CompositeParallelInitializable.cs" />
     <Compile Include="Globalization\IResources.cs" />
     <Compile Include="IEntityBuilder.cs" />
     <Compile Include="IInitializable.cs" />
