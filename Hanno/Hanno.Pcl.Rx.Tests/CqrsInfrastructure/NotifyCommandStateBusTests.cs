@@ -12,6 +12,7 @@ using Xunit;
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
+using Ploeh.AutoFixture.Idioms;
 
 namespace Hanno.Tests.CqrsInfrastructure
 {
@@ -63,6 +64,12 @@ namespace Hanno.Tests.CqrsInfrastructure
 		  NotifyCommandStateBus sut)
 		{
 			sut.IsAssignableTo<ICommandStateEvents>();
+		}
+
+		[Theory, AutoMoqData]
+		public void Sut_VerifyConstructorGuardClauses(GuardClauseAssertion assertion)
+		{
+			assertion.VerifyConstructors<NotifyCommandStateBus>();
 		}
 
 		[Theory, NotifyCommandStateBusAutoData]

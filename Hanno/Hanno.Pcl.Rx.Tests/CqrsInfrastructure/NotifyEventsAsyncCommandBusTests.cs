@@ -6,11 +6,24 @@ using Moq;
 using Ploeh.AutoFixture.Xunit;
 using Xunit.Extensions;
 using FluentAssertions;
+using Ploeh.AutoFixture.Idioms;
 
 namespace Hanno.Tests.CqrsInfrastructure
 {
 	public class NotifyEventsAsyncCommandBusTests
 	{
+		[Theory, AutoMoqData]
+		public void Sut_IsAsyncCommandBus(NotifyEventsAsyncCommandBus sut)
+		{
+			sut.Should().BeAssignableTo<IAsyncCommandBus>();
+		}
+
+		[Theory, AutoMoqData]
+		public void Sut_VerifyConstructorGuardClauses(GuardClauseAssertion assertion)
+		{
+			assertion.VerifyConstructors<NotifyEventsAsyncCommandBus>();
+		}
+
 		[Theory, AutoMoqData]
 		public async Task ProcessCommand_ShouldCallNotifyComplete(
 			[Frozen]Mock<ICommandEvents> commandEvents,
