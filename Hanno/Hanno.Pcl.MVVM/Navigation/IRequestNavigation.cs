@@ -7,7 +7,7 @@ namespace Hanno.Navigation
 	public interface IRequestNavigation
 	{
 		/// <summary>
-		/// Navigate to the specified Uri
+		/// Starts a navigation
 		/// </summary>		
 		Task Navigate(CancellationToken ct, INavigationRequest request);
 	}
