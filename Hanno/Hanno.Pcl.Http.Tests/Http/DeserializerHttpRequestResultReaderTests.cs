@@ -14,6 +14,7 @@ using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Xunit;
 using Xunit.Extensions;
+using Ploeh.AutoFixture.Idioms;
 
 namespace Hanno.Tests.Http
 {
@@ -58,6 +59,18 @@ namespace Hanno.Tests.Http
 	#endregion
 	public class DeserializerHttpRequestResultReaderTests
 	{
+		[Theory, AutoMoqData]
+		public void Sut_ShouldBeHttpRequestResultReader(DeserializerHttpRequestResultReader sut)
+		{
+			sut.Should().BeAssignableTo<IHttpRequestResultReader>();
+		}
+
+		[Theory, AutoMoqData]
+		public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
+		{
+			assertion.VerifyConstructors<DeserializerHttpRequestResultReader>();
+		}
+
 		[Theory, DeserializerHttpRequestResultReaderAutoData]
 		public async Task Read_ShouldReturnCorrectValue(
 			[Frozen]Mock<IDeserializer> deserializer,

@@ -8,7 +8,7 @@ using Hanno.Patterns;
 
 namespace Hanno
 {
-	public sealed class CompositeParallelInitializable : Composite<IInitializable>
+	public sealed class CompositeParallelInitializable : Composite<IInitializable>, IInitializable
 	{
 		public CompositeParallelInitializable(IEnumerable<IInitializable> instances) : base(instances)
 		{

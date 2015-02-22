@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Hanno.Http
 {
-	internal class NoResponse
+	public class NoResponse
 	{
 	}
 }
