@@ -106,8 +106,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Http\DefaultHttpRequestBusTests.cs" />
+    <Compile Include="Http\DefaultHttpRequestResolverTests.cs" />
     <Compile Include="Http\DeserializerHttpRequestResultReaderTests.cs" />
-    <Compile Include="Http\est.cs" />
+    <Compile Include="Http\QueryTests.cs" />
     <Compile Include="Http\HttpRequestBuilderFactoryTests.cs" />
     <Compile Include="Http\HttpRequestMethodBuilderTests.cs" />
     <Compile Include="Http\HttpRequestTest.cs" />

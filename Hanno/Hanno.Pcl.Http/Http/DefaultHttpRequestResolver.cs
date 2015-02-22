@@ -23,7 +23,13 @@ namespace Hanno.Http
 			_specsResolver = specsResolver;
 		}
 
-		public async Task<IHttpRequest> ResolveHttpRequest<TQuery>(TQuery parameter) where TQuery : IAsyncParameter
+		public Task<IHttpRequest> ResolveHttpRequest<TQuery>(TQuery parameter) where TQuery : IAsyncParameter
+		{
+			if (parameter == null) throw new ArgumentNullException("parameter");
+			return ResolveHttpRequestInternal(parameter);
+		}
+
+		private async Task<IHttpRequest> ResolveHttpRequestInternal<TQuery>(TQuery parameter) where TQuery : IAsyncParameter
 		{
 			var specs = _requestDefinitionSelector.ResolveHttpRequestSpecification(parameter);
 			var options = await _specsResolver.TransformHttpSpecificationsToHttpBuilderOptions(specs, parameter);
