@@ -2,112 +2,96 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Hanno.Extensions;
 using Moq;
-using Ploeh.AutoFixture;
+using Moq.Language.Flow;
+using Ploeh.Albedo;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Kernel;
 
 namespace Hanno.Testing.Autofixture
 {
-	public class AsyncMoqCustomization : ICustomization
+	internal class MockTasksPostProcessor : ISpecimenBuilder
 	{
-		public void Customize(IFixture fixture)
+		private readonly MockPostprocessor _postprocessor;
+
+		public MockTasksPostProcessor(MockPostprocessor postprocessor)
 		{
-			fixture.Register<MemoryStream>(() => new MemoryStream());
-			//fixture.Customizations.Add(
-			//	new AsyncMoqPostProcessor(
-			//		new MockPostprocessor(
-			//			new MethodInvoker(
-			//				new MockConstructorQuery())));
-			//fixture.Customizations.Add(new TaskSpecimenBuilder());
-			//var relay = new MockRelay();
+			if (postprocessor == null) throw new ArgumentNullException("postprocessor");
+			_postprocessor = postprocessor;
+		}
+
+		public object Create(object request, ISpecimenContext context)
+		{
+			var specimen = _postprocessor.Create(request, context);
+			if (specimen.GetType() == typeof (NoSpecimen))
+			{
+				return specimen;
+			}
+			var mockedType = GetMockedType(specimen);
+			var methodsWithTasks = GetMethodsWithTasks(mockedType);
+			var isAny = typeof (It).GetMethod("IsAny");
+			foreach (var method in methodsWithTasks)
+			{
+				var mockSetupMethod = GetMockSetupMethod(mockedType, method.ReturnType);
+				var mockReturnMethod = GetMockReturnsMethod(mockedType, method.ReturnType);
+				var returnTaskType = GetReturnType(method.ReturnType);
+				var returnValue = context.Resolve(returnTaskType);
+				var returnTask = typeof (Task).GetMethod("FromResult")
+				                              .MakeGenericMethod(method.ReturnType)
+				                              .Invoke(null, new object[] {returnValue});
+				var parameters = method.GetParameters()
+				                       .Select(info =>(Expression) Expression.Constant(isAny.MakeGenericMethod(info.ParameterType).Invoke(null, new object[] {})))
+				                       .ToArray();
+				var parameter = Expression.Parameter(mockedType);
+				var body = Expression.Call(parameter, method, parameters);
+				var lambda = Expression.Lambda(body, parameter);
+				var setup = mockSetupMethod.Invoke(specimen, new object[] {lambda});
+				mockReturnMethod.Invoke(setup, new object[] {returnTask});
+			}
+			return specimen;
+		}
+		
+		private Type GetMockedType(object specimen)
+		{
+			var type = specimen.GetType();
+			var genericTypeDefinition = type.GetGenericTypeDefinition();
+			if (genericTypeDefinition != typeof(Mock<>))
+			{
+				throw new ArgumentException("The type is not a instance of Mock<T>", "specimen");
+			}
+			return type.GetGenericArguments()[0];
+		}
+
+		private Type GetReturnType(Type returnType)
+		{
+			if (returnType.GetGenericTypeDefinition() != typeof (Task<>))
+			{
+				throw new ArgumentException("The return type of the method is not a valid task", "returnType");
+			}
+			return returnType.GetGenericArguments()[0];
+		}
+		
+		private MethodInfo GetMockSetupMethod(Type mockedType, Type returnType)
+		{
+			var funcType = typeof (Func<,>).MakeGenericType(mockedType, returnType);
+			return typeof (Mock<>).MakeGenericType(mockedType).GetMethod("Setup", new[] {funcType});
+		}
+
+		private MethodInfo GetMockReturnsMethod(Type mockedType, Type returnType)
+		{
+			var setupType = typeof (ISetup<,>).MakeGenericType(mockedType, returnType);
+			return setupType.GetMethod("Returns", new[] {returnType});
+		}
+
+		private IEnumerable<MethodInfo> GetMethodsWithTasks(Type type)
+		{
+			return type.GetMethods()
+			           .Where(mi => mi.ReturnType.GetGenericTypeDefinition() == typeof (Task<>));
 		}
 	}
-
-	//public class AsyncMoqPostProcessor : ISpecimenBuilder
-	//{
-	//	private readonly ISpecimenBuilder _innerBuilder;
-
-	//	public AsyncMoqPostProcessor(ISpecimenBuilder innerBuilder)
-	//	{
-	//		_innerBuilder = innerBuilder;
-	//	}
-
-	//	public object Create(object request, ISpecimenContext context)
-	//	{
-	//		var obj = _innerBuilder.Create(request, context);
-	//		if (obj.IsAssignableTo<NoSpecimen>())
-	//		{
-	//			return obj;
-	//		}
-	//		if (obj.IsAssignableTo<Mock>() && obj.GetType().IsGenericType)
-	//		{
-	//			Mock a;
-	//			a.DefaultValue
-	//		}
-	//	}
-	//}
-
-	//public class AsyncMockRelay : ISpecimenBuilder
-	//{
-	//	private readonly ISpecimenBuilder _innerRelay;
-
-	//	public AsyncMockRelay(ISpecimenBuilder innerRelay)
-	//	{
-	//		if (innerRelay == null) throw new ArgumentNullException("innerRelay");
-	//		_innerRelay = innerRelay;
-	//	}
-
-	//	public object Create(object request, ISpecimenContext context)
-	//	{
-	//		var type = request as Type;
-	//		if (type == null)
-	//		{
-	//			return new NoSpecimen(request);
-	//		}
-	//		if (!type.IsAssignableTo<Mock>())
-	//		{
-	//			return new NoSpecimen(request);
-	//		}
-	//		var result = _innerRelay.Create(request, context);
-	//		if (result is NoSpecimen)
-	//		{
-	//			return result;
-	//		}
-	//		var mock = result as Mock;
-	//		if (mock == null)
-	//		{
-	//			return result;
-	//		}
-	//		mock.GetType().GetMethod("Setup");
-	//		return null;
-	//	}
-	//}
-
-	//public class TaskSpecimenBuilder : ISpecimenBuilder
-	//{
-	//	public object Create(object request, ISpecimenContext context)
-	//	{
-	//		var type = request as Type;
-	//		if (type == null)
-	//		{
-	//			return new NoSpecimen(request);
-	//		}
-	//		if (!type.IsAssignableTo<Task>())
-	//		{
-	//			return new NoSpecimen(request);
-	//		}
-	//		if (type == typeof(Task))
-	//		{
-	//			return Task.FromResult(new object());
-	//		}
-	//		var taskReturnType = type.GenericTypeArguments.First();
-	//		var taskReturnResult = context.Resolve(taskReturnType);
-	//		var task = typeof(Type).GetMethod("FromResult").MakeGenericMethod(taskReturnType).Invoke(null, new[] { taskReturnResult });
-	//		return task;
-	//	}
-	//}
 }

@@ -288,6 +288,38 @@
             Gets the child commands.
             </summary>
         </member>
+        <member name="T:Ploeh.AutoFixture.Kernel.EnumeratorRelay">
+            <summary>
+            Relays a request for <see cref="T:System.Collections.Generic.IEnumerator`1"/> to 
+            <see cref="T:System.Collections.Generic.IEnumerable`1"/> and converts the result to an enumerator
+            of a sequence of the requested type.
+            </summary>
+        </member>
+        <member name="M:Ploeh.AutoFixture.Kernel.EnumeratorRelay.Create(System.Object,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            Creates a new enumerator based on a request.
+            </summary>
+            <param name="request">
+            The request that describes what to create.
+            </param>
+            <param name="context">
+            A context that can be used to create other specimens.
+            </param>
+            <returns>
+            An enumerator of the requested type if possible; otherwise a 
+            <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
+            </returns>
+            <remarks>
+            <para>
+            If <paramref name="request"/> is a request for an 
+            <see cref="T:System.Collections.Generic.IEnumerator`1"/> and <paramref name="context"/> can
+            satisfy an <see cref="T:System.Collections.Generic.IEnumerable`1"/> request for the
+            element type, the return value is an enumerator of the
+            requested type. If not, the return value is a
+            <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
+            </para>
+            </remarks>
+        </member>
         <member name="T:Ploeh.AutoFixture.Kernel.GenericMethod">
             <summary>
             Encapsulates a generic method, inferring the type parameters bases on invocation arguments.
@@ -11125,6 +11157,25 @@
             <returns>
             The requested specimen if possible; otherwise a <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
             </returns>
+        </member>
+        <member name="T:Ploeh.AutoFixture.MailAddressGenerator">
+            <summary>
+            Creates new <see cref="T:System.Net.Mail.MailAddress"/> instances.
+            </summary>
+        </member>
+        <member name="M:Ploeh.AutoFixture.MailAddressGenerator.Create(System.Object,Ploeh.AutoFixture.Kernel.ISpecimenContext)">
+            <summary>
+            Creates a new MailAddress.
+            </summary>
+            <param name="request">The request that describes what to create.</param>
+            <param name="context">A context that can be used to create other specimens.</param>
+            <returns>
+            The requested specimen if possible; otherwise a <see cref="T:Ploeh.AutoFixture.Kernel.NoSpecimen"/> instance.
+            </returns>
+            <remarks>&gt;
+            The generated MailAddress will have one of the reserved domains,
+            so as to avoid any possibility of tests bothering real email addresses
+            </remarks>
         </member>
     </members>
 </doc>

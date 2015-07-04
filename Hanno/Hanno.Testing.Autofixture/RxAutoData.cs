@@ -9,7 +9,7 @@ namespace Hanno.Testing.Autofixture
     public class RxCompositeCustomization : CompositeCustomization
     {
         public RxCompositeCustomization()
-            : base(new AutoMoqCustomization(), new RxCustomization(), new AsyncMoqCustomization())
+            : base(new HannoCustomization(), new RxCustomization())
         {
         }
     }

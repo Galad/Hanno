@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Concurrency;
+using Hanno.Concurrency;
 
 namespace Hanno.Phone.Rx.Concurrency
 {
@@ -13,18 +14,18 @@ namespace Hanno.Phone.Rx.Concurrency
 			_dispatcher = dispatcher;
 		}
 
-		public IScheduler ThreadPool { get { return ThreadPoolScheduler.Instance; } }
+		public IPriorityScheduler ThreadPool { get { return new SingleSchedulerPriorityScheduler(ThreadPoolScheduler.Instance); } }
 		public IScheduler TaskPool { get { return TaskPoolScheduler.Default; } }
 		public IScheduler Immediate { get { return ImmediateScheduler.Instance; } }
 
-		public IScheduler Dispatcher
+		public IPriorityScheduler Dispatcher
 		{
-			get { return _dispatcher; }
+			get { return new SingleSchedulerPriorityScheduler(_dispatcher); }
 		}
 
 		public IScheduler CurrentThread { get { return CurrentThreadScheduler.Instance; } }
 
-		void ISchedulers.SafeDispatch(Action action)
+		public void SafeDispatch(Action action)
 		{
 			if (_dispatcher.Dispatcher.CheckAccess())
 			{

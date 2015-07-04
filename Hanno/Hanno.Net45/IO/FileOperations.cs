@@ -73,5 +73,15 @@ namespace Hanno.IO
 					throw new NotSupportedException(string.Format("File mode {0} is not supported", fileMode));
 			}
 		}
+
+		public void Move(string sourcePath, string targetPath)
+		{
+			File.Move(sourcePath, targetPath);
+		}
+
+		public bool Exists(string path)
+		{
+			return File.Exists(path);
+		}
 	}
 }

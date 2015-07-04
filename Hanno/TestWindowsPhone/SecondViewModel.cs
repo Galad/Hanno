@@ -20,6 +20,10 @@ namespace TestWindowsPhone
 	}
 	public class SecondViewModel : ViewModelBase
 	{
+		public SecondViewModel(IViewModelServices services) : base(services)
+		{
+		}
+
 		public string Test { get { return "Hello world"; } }
 
 		public int I

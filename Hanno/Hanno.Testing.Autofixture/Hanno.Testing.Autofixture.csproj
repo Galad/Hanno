@@ -58,13 +58,13 @@
       <HintPath>..\packages\Albedo.1.0.2\lib\net35\Ploeh.Albedo.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.23.1.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+    <Reference Include="Ploeh.AutoFixture, Version=3.24.3.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoFixture.3.23.1\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <HintPath>..\packages\AutoFixture.3.24.3\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.23.1.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.24.3.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoFixture.AutoMoq.3.23.1\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
+      <HintPath>..\packages\AutoFixture.AutoMoq.3.24.3\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
     </Reference>
     <Reference Include="Ploeh.AutoFixture.Idioms, Version=3.23.1.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -117,9 +117,11 @@
     <Compile Include="AsyncMoqCustomization.cs" />
     <Compile Include="AutoMoqDataAttribute.cs" />
     <Compile Include="ExceptionBehaviorExpectation.cs" />
+    <Compile Include="HannoAutoConfiguredMoqCustomization.cs" />
     <Compile Include="Idioms\FilteredParametersBehaviorExpectation.cs" />
     <Compile Include="Idioms\VerifySpecifiedParametersBehaviorExpectation.cs" />
     <Compile Include="Idioms\IdiomaticAssertionExtensions.cs" />
+    <Compile Include="IoCustomization.cs" />
     <Compile Include="LocalAddin.cs" />
     <Compile Include="MockExtensions.cs" />
     <Compile Include="ObjectExtensions.cs" />

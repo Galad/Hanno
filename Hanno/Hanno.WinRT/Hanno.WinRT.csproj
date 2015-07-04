@@ -59,6 +59,7 @@
     <Compile Include="..\Hanno.Phone\IO\FromStorageFolderDirectoryOperations.cs">
       <Link>IO\FromStorageFolderDirectoryOperations.cs</Link>
     </Compile>
+    <Compile Include="MVVM\Controls\Test.cs" />
     <Compile Include="Search\ISearchSuggestionProvider.cs" />
     <Compile Include="Search\ISearchResultVisitor.cs" />
     <Compile Include="Search\ISearchSuggestion.cs" />

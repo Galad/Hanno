@@ -10,5 +10,7 @@ namespace Hanno.IO
 		Task WriteAllBytes(string path, byte[] bytes);
 		Task<Stream> OpenWrite(string path);
 		Task<Stream> Open(string path, FileMode fileMode, FileAccess fileAccess);
+		Task Move(string sourcePath, string targetPath);
+		Task<bool> Exists(string path);
 	}
 }

@@ -21,6 +21,10 @@ namespace TestWindowsPhone
 {
 	public class MainViewModel : ViewModelBase
 	{
+		public MainViewModel(IViewModelServices services) : base(services)
+		{
+		}
+
 		public string Test
 		{
 			get { return GetValue<string>(); }
@@ -29,7 +33,7 @@ namespace TestWindowsPhone
 
 		public IObservable<string> TestObservableProperty
 		{
-			get { return this.GetObservableProperty<string>(); }
+			get { return this.GetObservableProperty(() =>  Observable.Empty<string>()); }
 		}
 
 		protected override async Task OnLoaded(CancellationToken ct)

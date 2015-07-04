@@ -216,5 +216,25 @@ namespace Hanno.IO
 			}
 			return folder;
 		}
+
+		public async Task Move(string sourcePath, string targetPath)
+		{
+			var file = await GetStorageFileFromPath(sourcePath);
+			var targetFolder = await GetStorageFolderFromFilePath(targetPath);
+			await file.MoveAsync(targetFolder, Path.GetFileName(targetPath));
+		}
+
+		public async Task<bool> Exists(string path)
+		{
+			try
+			{
+				var file = await GetStorageFileFromPath(path);				
+			}
+			catch (FileNotFoundException)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }

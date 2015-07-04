@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22512.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanno.Pcl", "Hanno.Pcl\Hanno.Pcl.csproj", "{D2D485CD-2EAD-48ED-A8CD-ABE6971C6D63}"
 EndProject
@@ -70,8 +70,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{ADE0B3
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hanno.Test.Autofixture.Tests", "Hanno.Test.Autofixture.Tests\Hanno.Test.Autofixture.Tests.csproj", "{60C7105A-7C71-46B9-BC78-29C3F47E51FB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		TestUniversalApp\TestUniversalApp.Shared\TestUniversalApp.Shared.projitems*{10a25efd-f855-46b7-8d7c-2639b714dfa3}*SharedItemsImports = 4
+		TestUniversalApp\TestUniversalApp.Shared\TestUniversalApp.Shared.projitems*{7dfbfc27-74c2-469f-b519-0d4d70f5d23b}*SharedItemsImports = 4
 		TestUniversalApp\TestUniversalApp.Shared\TestUniversalApp.Shared.projitems*{ee3fc4e5-bf52-47e9-b7ee-5614b8e97489}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -434,6 +438,16 @@ Global
 		{B19D6357-FF08-4040-977C-7676E1FF4AF2}.Release|x64.Build.0 = Release|x64
 		{B19D6357-FF08-4040-977C-7676E1FF4AF2}.Release|x86.ActiveCfg = Release|x86
 		{B19D6357-FF08-4040-977C-7676E1FF4AF2}.Release|x86.Build.0 = Release|x86
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Release|x64.ActiveCfg = Release|Any CPU
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -466,5 +480,6 @@ Global
 		{8E27B9F7-AF62-4479-9A2E-0E834BB04DEE} = {A60534A9-D488-4302-B7EE-7682734ECB4A}
 		{E278499A-0F11-43BC-BF2A-61FBA3029E36} = {BE1D08FD-04FF-4717-BC96-58BA7600FFC9}
 		{B19D6357-FF08-4040-977C-7676E1FF4AF2} = {A60534A9-D488-4302-B7EE-7682734ECB4A}
+		{60C7105A-7C71-46B9-BC78-29C3F47E51FB} = {BE1D08FD-04FF-4717-BC96-58BA7600FFC9}
 	EndGlobalSection
 EndGlobal

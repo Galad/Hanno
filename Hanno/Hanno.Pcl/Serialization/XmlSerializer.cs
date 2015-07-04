@@ -26,6 +26,7 @@ namespace Hanno.Serialization
 		{
 			var serializer = GetSerializer<T>();
 			serializer.Serialize(stream, value);
+			stream.Position = 0;
 		}
 
 		private System.Xml.Serialization.XmlSerializer GetSerializer<T>()

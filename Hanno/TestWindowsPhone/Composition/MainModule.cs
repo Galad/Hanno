@@ -27,9 +27,9 @@ namespace TestWindowsPhone.Composition
 		public void Register(IUnityContainer container)
 		{
 			container.RegisterType<ISchedulers>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new WindowsPhoneSchedulers(DispatcherScheduler.Current)));
-			container.RegisterViewModel(c => new MainViewModel());
-			container.RegisterViewModel(c => new SecondViewModel());
-			container.RegisterViewModel(c => new ThirdViewModel());
+			container.RegisterViewModel((c, s) => new MainViewModel(s));
+			container.RegisterViewModel((c, s) => new SecondViewModel(s));
+			container.RegisterViewModel((c, s) => new ThirdViewModel(s));
 			container.RegisterType<ISerializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringSerializer(new XmlSerializer())));
 			container.RegisterType<IDeserializer>(new ContainerControlledLifetimeManager(), new InjectionFactory(c => new SafeStringDeserializer(new XmlSerializer())));
 			container.RegisterType<IScheduler>("ThreadPoolScheduler", new ContainerControlledLifetimeManager(), new InjectionFactory(c => ThreadPoolScheduler.Instance));

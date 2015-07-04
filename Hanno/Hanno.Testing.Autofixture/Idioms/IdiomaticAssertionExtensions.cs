@@ -57,5 +57,11 @@ namespace Ploeh.AutoFixture.Idioms
 			var constructor = typeof (T).GetConstructors().First(c => c.GetParameters().Any());
             assertion.Verify(constructor);
 		}
+
+	    public static void VerifyType<T>(this IIdiomaticAssertion assertion)
+	    {
+		    if (assertion == null) throw new ArgumentNullException("assertion");
+		    assertion.Verify(typeof (T));
+	    }
     }
 }

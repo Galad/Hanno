@@ -9,5 +9,8 @@ namespace TestWindowsPhone
 {
 	public class ThirdViewModel : ViewModelBase
 	{
+		public ThirdViewModel(IViewModelServices services) : base(services)
+		{
+		}
 	}
 }

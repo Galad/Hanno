@@ -38,5 +38,15 @@ namespace Hanno.IO
 		{
 			return Task.Run(() => _synchronousFileOperations.Open(path, fileMode, fileAccess));
 		}
+
+		public Task Move(string sourcePath, string targetPath)
+		{
+			return Task.Run(() => _synchronousFileOperations.Move(sourcePath, targetPath));
+		}
+
+		public Task<bool> Exists(string path)
+		{
+			return Task.Run(() => _synchronousFileOperations.Exists(path));
+		}
 	}
 }

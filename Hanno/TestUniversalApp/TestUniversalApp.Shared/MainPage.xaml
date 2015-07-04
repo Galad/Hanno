@@ -9,18 +9,22 @@
     mc:Ignorable="d">
 
 	<Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-		<!--<controls:ObservablePresenter Observable="{Binding TestObservable}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<controls:ObservablePresenter Observable="{Binding TestObservable}"  Style="{StaticResource ObservablePresenterBase}">
 			<DataTemplate>
 				<TextBlock Text="{Binding Value}" Margin="120,140,0,0" />
 			</DataTemplate>
-		</controls:ObservablePresenter>-->
-		<controls:ObservablePresenter Observable="{Binding TestUpdatable}">
+		</controls:ObservablePresenter>
+		<!--<controls:ObservablePresenter Observable="{Binding TestUpdatable}" Style="{StaticResource ObservablePresenterBase}">
 			<DataTemplate>
 				<GridView ItemsSource="{Binding Value}"
 						  Padding="120,140,0,0" />
 			</DataTemplate>
-		</controls:ObservablePresenter>
-		<StackPanel>
+		</controls:ObservablePresenter>-->
+		<StackPanel Grid.Row="1">
 			<Button Content="Test" HorizontalAlignment="Stretch" VerticalAlignment="Center"
 					Command="{Binding Navigate}"/>
 			<Button Content="Test search" Command="{Binding TestSearch}" />
