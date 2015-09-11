@@ -1,1 +1,1 @@
-xcopy "D:\Git\Repos\Hanno-Github\Hanno\Hanno.WindowsStore\bin\Debug" "D:\Git\Repos\Gaku\Gaku\Hanno" /e /y
+rem xcopy "D:\Git\Repos\Hanno-Github\Hanno\Hanno.WindowsStore\bin\Debug" "D:\Git\Repos\Gaku\Gaku\Hanno" /e /y

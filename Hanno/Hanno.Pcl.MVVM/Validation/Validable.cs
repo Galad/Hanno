@@ -22,6 +22,14 @@ namespace Hanno.Validation
 
 		public RuleDefinerInterceptor(Action<string> interceptionAction, IValidator innerDefiner)
 		{
+			if (interceptionAction == null)
+			{
+				throw new ArgumentNullException(nameof(interceptionAction), $"{nameof(interceptionAction)} is null.");
+			}
+			if (innerDefiner == null)
+			{
+				throw new ArgumentNullException(nameof(innerDefiner), $"{nameof(innerDefiner)} is null.");
+			}
 			_interceptionAction = interceptionAction;
 			_innerDefiner = innerDefiner;
 		}
