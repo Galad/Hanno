@@ -8,9 +8,9 @@ using Hanno.Cache;
 using Hanno.Testing.Autofixture;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Hanno.Tests.Cache
 {

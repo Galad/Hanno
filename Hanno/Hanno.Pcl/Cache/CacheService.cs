@@ -30,12 +30,16 @@ namespace Hanno.Cache
 		private readonly ICacheEntryRepository _cacheEntryRepository;
 		private readonly List<RunningTask> _runningTasks = new List<RunningTask>();
 		private readonly List<RunningSemaphore> _runningSemaphores = new List<RunningSemaphore>();
+        private readonly INow _now;
 
-		public CacheService(
-			ICacheEntryRepository cacheEntryRepository)
+        public CacheService(
+			ICacheEntryRepository cacheEntryRepository,
+            INow now)
 		{
-			if (cacheEntryRepository == null) throw new ArgumentNullException("cacheEntryRepository");
+            if (now == null) throw new ArgumentNullException(nameof(now), $"{nameof(now)} is null.");
+            if (cacheEntryRepository == null) throw new ArgumentNullException(nameof(cacheEntryRepository));
 			_cacheEntryRepository = cacheEntryRepository;
+            _now = now;
 		}
 
 		public async Task<T> ExecuteWithCache<T>(CancellationToken ct, string cacheKey, Func<Task<T>> execute, TimeSpan maxAge, IDictionary<string, string> attributes = null)
@@ -110,7 +114,7 @@ namespace Hanno.Cache
 				await AddNewCacheEntry(cacheKey, attributes, result);
 				return result;
 			}
-			var now = NowContext.Current.Now;
+            var now = _now.Now;
 			if (existingEntry.DateCreated.Add(maxAge) < now)
 			{
 				var result = await execute();
@@ -164,7 +168,7 @@ namespace Hanno.Cache
 
 		private async Task AddNewCacheEntry<T>(string cacheKey, IDictionary<string, string> attributes, T result)
 		{
-			var entry = new CacheEntry<T>(Guid.NewGuid(), cacheKey, attributes ?? new Dictionary<string, string>(), NowContext.Current.Now, result);
+			var entry = new CacheEntry<T>(Guid.NewGuid(), cacheKey, attributes ?? new Dictionary<string, string>(), _now.Now, result);
 			await _cacheEntryRepository.AddOrUpdate(CancellationToken.None, entry);
 		}
 
@@ -180,7 +184,7 @@ namespace Hanno.Cache
 		public async Task Invalidate<T>(CancellationToken ct, string cacheKey, TimeSpan minAge, IDictionary<string, string> attributes = null)
 		{
 			var entry = await _cacheEntryRepository.Get<T>(ct, cacheKey, attributes ?? new Dictionary<string, string>());
-			var now = NowContext.Current.Now;
+            var now = _now.Now;
 			if (entry != null && entry.DateCreated.Add(minAge) < now)
 			{
 				await _cacheEntryRepository.Remove<T>(CancellationToken.None, cacheKey, entry.Id);

@@ -1,7 +1,7 @@
 ﻿using System;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Ploeh.AutoFixture;
-using Xunit.Extensions;
+using Xunit;
 using Xunit;
 using FluentAssertions;
 using Moq;

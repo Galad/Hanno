@@ -7,9 +7,9 @@ using FluentAssertions;
 using Hanno.Rx.Extensions;
 using Hanno.Testing.Autofixture;
 using Microsoft.Reactive.Testing;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Hanno.Pcl.Rx.Tests.Extensions
 {

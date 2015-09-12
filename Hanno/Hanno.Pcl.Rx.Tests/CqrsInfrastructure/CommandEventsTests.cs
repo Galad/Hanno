@@ -8,8 +8,8 @@ using Microsoft.Reactive.Testing;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using System.Reactive.Concurrency;
 
 namespace Hanno.Tests.CqrsInfrastructure

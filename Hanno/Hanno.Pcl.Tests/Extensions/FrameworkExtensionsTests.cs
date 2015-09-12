@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
 using Hanno.Extensions;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Pcl.Tests.Extensions
 {

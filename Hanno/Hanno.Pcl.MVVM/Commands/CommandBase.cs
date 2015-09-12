@@ -65,7 +65,11 @@ namespace Hanno.Commands
 			{
 				//Add disposition of managed resources here
 				_disposable.Dispose();
-				_canExecuteStrategy.Dispose();
+                var disposable = _canExecuteStrategy as IDisposable;
+                if(disposable != null)
+                {
+                    disposable.Dispose();
+                }
 			}
 
 			//Add disposition of unmanaged resources here

@@ -2,8 +2,8 @@
 using System.Reactive.Disposables;
 using FluentAssertions;
 using Hanno.Testing.Autofixture;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Pcl.Rx.Tests.Extensions
 {

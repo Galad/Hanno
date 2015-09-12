@@ -3,7 +3,7 @@ using System.Reactive;
 
 namespace Hanno.Commands
 {
-	public interface ICanExecuteStrategy<in T> : IDisposable
+	public interface ICanExecuteStrategy<in T>
 	{
 		void NotifyExecuting(T parameter);
 		void NotifyNotExecuting(T parameter);

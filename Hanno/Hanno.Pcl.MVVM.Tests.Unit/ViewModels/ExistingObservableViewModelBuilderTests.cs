@@ -2,8 +2,8 @@
 using FluentAssertions;
 using Hanno.ViewModels;
 using Moq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.ViewModels
 {

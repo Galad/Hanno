@@ -4,7 +4,7 @@ using System.Reactive.Subjects;
 
 namespace Hanno.Commands
 {
-	public class SingleExecutionCanExecuteStrategy<T> : ICanExecuteStrategy<T>
+	public class SingleExecutionCanExecuteStrategy<T> : ICanExecuteStrategy<T>, IDisposable
 	{
 		public readonly Func<T, bool> CanExecutePredicate;
 		private readonly Subject<Unit> _canExecuteChanged;

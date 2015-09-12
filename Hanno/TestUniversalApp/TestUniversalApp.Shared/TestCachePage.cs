@@ -12,6 +12,7 @@ using Hanno.Diagnostics;
 using Hanno.Extensions;
 using Hanno.Http;
 using Hanno.ViewModels;
+using Hanno;
 
 namespace TestUniversalApp
 {
@@ -34,7 +35,7 @@ namespace TestUniversalApp
 									   new HttpRequestBuilderFactory(),
 									   new TestBuildHttpRequestResolver())),
 							   new TestHttpRequestResultReaderResolver());
-			_cacheService = new CacheService(new MemoryCacheEntryRepository());
+			_cacheService = new CacheService(new MemoryCacheEntryRepository(), new SystemUtcNow());
 			_busWithCache = new CacheAsyncQueryBus(
 				_bus,
 				_cacheService,

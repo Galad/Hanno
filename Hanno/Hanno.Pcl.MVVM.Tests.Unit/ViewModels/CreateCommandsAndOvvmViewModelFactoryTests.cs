@@ -6,8 +6,8 @@ using Hanno.Testing.Autofixture;
 using Hanno.Validation;
 using Hanno.ViewModels;
 using Moq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using FluentAssertions;
 
 namespace Hanno.Tests.ViewModels

@@ -2,8 +2,8 @@
 using FluentAssertions;
 using Hanno.Extensions;
 using Hanno.Collection;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Collections
 {

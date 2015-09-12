@@ -6,8 +6,8 @@ using FluentAssertions;
 using Hanno.Commands;
 using Hanno.Testing.Autofixture;
 using Moq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Commands
 {

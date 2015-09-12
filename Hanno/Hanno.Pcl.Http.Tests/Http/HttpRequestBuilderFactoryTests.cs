@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
 using Hanno.Http;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Http
 {

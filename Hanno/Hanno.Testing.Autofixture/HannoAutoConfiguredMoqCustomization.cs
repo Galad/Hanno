@@ -58,16 +58,20 @@ namespace Hanno.Testing.Autofixture
 			if (fixture == null) throw new ArgumentNullException("fixture");
 
 
-			fixture.Customizations.Add(
-				new Postprocessor(
-					builder: new MockTasksPostProcessor(
-						new MockPostprocessor(
-							new MethodInvoker(
-								new MockConstructorQuery()))),
-					command: new CompositeSpecimenCommand(
-						new MockVirtualMethodsCommand(),
-						new StubPropertiesCommand(),
-						new AutoMockPropertiesCommand())));
+            fixture.Customizations.Add(
+                new Postprocessor(
+                    builder: new MockPostprocessor(
+                        new MockPostprocessor(
+                            new MethodInvoker(
+                                new MockConstructorQuery()))),
+                    command: new CompositeSpecimenCommand(
+                        new MockVirtualMethodsCommand(),
+                        new StubPropertiesCommand()
+                        //new StubReadonlyPropertiesCommand()
+                        //new AutoMockPropertiesCommand()
+                                )
+                            )
+                        );
 
 
 			fixture.ResidueCollectors.Add(Relay);

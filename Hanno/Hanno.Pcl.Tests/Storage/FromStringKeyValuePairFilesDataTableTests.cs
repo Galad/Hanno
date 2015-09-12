@@ -13,9 +13,9 @@ using Hanno.Testing.Autofixture;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 using FileAccess = Hanno.IO.FileAccess;
 using FileMode = Hanno.IO.FileMode;
 

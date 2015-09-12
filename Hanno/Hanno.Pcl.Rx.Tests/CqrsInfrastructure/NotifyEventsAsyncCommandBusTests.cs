@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Hanno.CqrsInfrastructure;
 using Hanno.Testing.Autofixture;
 using Moq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using FluentAssertions;
 using Ploeh.AutoFixture.Idioms;
 

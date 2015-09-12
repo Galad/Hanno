@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hanno.Diagnostics;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 using FluentAssertions;
 
 namespace Hanno.Tests.Diagnostics

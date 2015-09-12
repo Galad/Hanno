@@ -5,9 +5,8 @@ using FluentAssertions;
 using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Hanno.Tests.ViewModels
 {

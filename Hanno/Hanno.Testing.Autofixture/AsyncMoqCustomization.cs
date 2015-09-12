@@ -42,7 +42,7 @@ namespace Hanno.Testing.Autofixture
 				var returnTaskType = GetReturnType(method.ReturnType);
 				var returnValue = context.Resolve(returnTaskType);
 				var returnTask = typeof (Task).GetMethod("FromResult")
-				                              .MakeGenericMethod(method.ReturnType)
+				                              .MakeGenericMethod(returnTaskType)
 				                              .Invoke(null, new object[] {returnValue});
 				var parameters = method.GetParameters()
 				                       .Select(info =>(Expression) Expression.Constant(isAny.MakeGenericMethod(info.ParameterType).Invoke(null, new object[] {})))
@@ -91,7 +91,7 @@ namespace Hanno.Testing.Autofixture
 		private IEnumerable<MethodInfo> GetMethodsWithTasks(Type type)
 		{
 			return type.GetMethods()
-			           .Where(mi => mi.ReturnType.GetGenericTypeDefinition() == typeof (Task<>));
+			           .Where(mi => mi.ReturnType.IsGenericType && mi.ReturnType.GetGenericTypeDefinition() == typeof (Task<>));
 		}
 	}
 }

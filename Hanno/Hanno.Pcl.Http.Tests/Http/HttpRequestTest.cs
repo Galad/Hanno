@@ -8,16 +8,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Hanno.Http;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Hanno.Tests.Http
 {
 	[Trait("Category", "Hello")]
 	public class HttpRequestTest
 	{
-		[Theory(Timeout=60000), AutoData]
+		[Theory, AutoData]
 		public async Task Execute_ShouldReturnCorrectValue()
 		{
 			//arrange

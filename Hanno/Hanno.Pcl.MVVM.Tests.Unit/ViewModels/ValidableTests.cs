@@ -13,8 +13,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
+using Ploeh.AutoFixture.Idioms;
 
 namespace Hanno.Tests.ViewModels
 {
@@ -91,7 +92,13 @@ namespace Hanno.Tests.ViewModels
 
 	public class ValidableTests
 	{
-		[Theory(Timeout = 5000), ValidableAutoData]
+        [Theory, ValidableAutoData]
+        public void Sut_VerifyGuardClauses(GuardClauseAssertion assertion)
+        {
+            assertion.VerifyConstructors<SampleValidable>();
+        }
+
+		[Theory, ValidableAutoData]
 		public async Task HasError_ShouldReturnCorrectValue(
 			[Frozen] Mock<IValidator> validator,
 			SampleValidable sut,
@@ -108,7 +115,7 @@ namespace Hanno.Tests.ViewModels
 			actual.Should().Be(false);
 		}
 
-		[Theory(Timeout = 5000), ValidableAutoData]
+		[Theory, ValidableAutoData]
 		public async Task HasError_WithPropertyValidatedTwice_ShouldReturnTrue(
 			[Frozen] Mock<IValidator> validator,
 			SampleValidable sut,
@@ -130,7 +137,7 @@ namespace Hanno.Tests.ViewModels
 			actual.Should().BeTrue();
 		}
 
-		[Theory(Timeout = 5000), ValidableAutoData]
+		[Theory, ValidableAutoData]
 		public async Task HasError_WithPropertyValidatedTwice_ShouldReturnFalse(
 			[Frozen] Mock<IValidator> validator,
 			SampleValidable sut,
@@ -244,7 +251,7 @@ namespace Hanno.Tests.ViewModels
 		public class HasErrorsTestData : CompositeDataAttribute
 		{
 			public HasErrorsTestData(string property)
-				: base(new PropertyDataAttribute(property), new ValidableAutoDataAttribute())
+				: base(new MemberDataAttribute(property), new ValidableAutoDataAttribute())
 			{
 			}
 		}

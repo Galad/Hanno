@@ -7,31 +7,31 @@ namespace Hanno
 		DateTimeOffset Now { get; }
 	}
 
-	public static class NowContext
-	{
-		private static INow _now;
+	//public static class NowContext
+	//{        
+	//	private static INow _now;
 
-		static NowContext()
-		{
-			ResetToDefault();
-		}
+	//	static NowContext()
+	//	{
+	//		ResetToDefault();
+	//	}
 
-		public static INow Current
-		{
-			get { return _now; }
-		}
+	//	public static INow Current
+	//	{
+	//		get { return _now; }
+	//	}
 
-		public static void SetContext(INow now)
-		{
-			if (now == null) throw new ArgumentNullException("now");
-			_now = now;
-		}
+	//	public static void SetContext(INow now)
+	//	{
+	//		if (now == null) throw new ArgumentNullException("now");
+	//		_now = now;
+	//	}
 
-		public static void ResetToDefault()
-		{
-			_now = new SystemUtcNow();
-		}
-	}
+	//	public static void ResetToDefault()
+	//	{
+	//		_now = new SystemUtcNow();
+	//	}
+	//}
 
 	public class SystemUtcNow : INow
 	{

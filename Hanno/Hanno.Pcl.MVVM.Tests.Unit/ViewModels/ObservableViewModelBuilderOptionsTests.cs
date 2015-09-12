@@ -8,7 +8,7 @@ using FluentAssertions;
 using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
 using Microsoft.Reactive.Testing;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Hanno.Tests.ViewModels
 {

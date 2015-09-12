@@ -8,8 +8,8 @@ using Hanno.Http;
 using Hanno.Testing.Autofixture;
 using Moq;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Http
 {

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Hanno.CqrsInfrastructure;
 using Hanno.Testing.Autofixture;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using FluentAssertions;
 
 namespace Hanno.Tests.CqrsInfrastructure

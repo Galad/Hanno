@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Hanno.Commands;
 using Hanno.Testing.Autofixture;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Commands
 {

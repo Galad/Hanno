@@ -5,7 +5,7 @@ using System.Reactive.Subjects;
 
 namespace Hanno.Commands
 {
-	public class ObserveCanExecuteStrategy<T> : ICanExecuteStrategy<T>
+	public sealed class ObserveCanExecuteStrategy<T> : ICanExecuteStrategy<T>, IDisposable
 	{
 		public IObservable<bool> CanExecuteObservable { get; private set; }
 		public readonly ICanExecuteStrategy<T> InnerCanExecuteStrategy;
@@ -63,7 +63,7 @@ namespace Hanno.Commands
 			GC.SuppressFinalize(this);
 		}
 
-		public virtual void Dispose(bool disposing)
+		public void Dispose(bool disposing)
 		{
 			if (_isDisposed)
 			{
@@ -73,7 +73,6 @@ namespace Hanno.Commands
 			if (disposing)
 			{
 				_subscription.Dispose();
-				InnerCanExecuteStrategy.Dispose();
 				_observableCanExecuteChanged.Dispose();
 			}
 

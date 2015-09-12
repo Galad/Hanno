@@ -5,8 +5,8 @@ using Hanno.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using FluentAssertions;
 
 namespace Hanno.Tests.ViewModels

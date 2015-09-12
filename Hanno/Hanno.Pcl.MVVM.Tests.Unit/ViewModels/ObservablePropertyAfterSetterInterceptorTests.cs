@@ -7,7 +7,6 @@ using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Idioms;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Hanno.Tests.ViewModels
 {

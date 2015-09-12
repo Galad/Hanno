@@ -63,7 +63,9 @@ namespace Hanno.Validation
 		public Validable(IValidator validator, ISchedulers scheduler)
 			: base(scheduler)
 		{
-			_scheduler = scheduler;
+            if (validator == null)
+                throw new ArgumentNullException(nameof(validator), $"{nameof(validator)} is null.");
+            _scheduler = scheduler;
 			Validator = CreateRuleDefiner(validator);
 		}
 
@@ -115,7 +117,9 @@ namespace Hanno.Validation
 
 		protected virtual async Task<bool> SetValueAsync<T>(T value, string key, CancellationTokenSource cancellationTokenSource)
 		{
-			var hasChanged = base.SetValue(value, key);
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentException($"{nameof(key)} is null or empty.", nameof(key));
+            var hasChanged = base.SetValue(value, key);
 			await ValidateValueAsync(value, key, hasChanged, cancellationTokenSource);
 			return hasChanged;
 		}

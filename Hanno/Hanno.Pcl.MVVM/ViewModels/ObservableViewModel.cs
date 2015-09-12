@@ -174,15 +174,31 @@ namespace Hanno.ViewModels
 				return chainedPredicate(arg);
 			};
 		}
-
-		public void Dispose()
-		{
-			_notificationsSubject.OnCompleted();
-			_notificationsSubject.Dispose();
-			_notificationDisposable.Dispose();
-			_subscriptions.Dispose();
-		}
-
+        
 		public T CurrentValue { get; private set; }
-	}
+
+        #region IDisposable Support
+        private bool disposedValue = false; // Pour détecter les appels redondants
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _notificationsSubject.OnCompleted();
+                    _notificationsSubject.Dispose();
+                    _notificationDisposable.Dispose();
+                    _subscriptions.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
+    }
 }

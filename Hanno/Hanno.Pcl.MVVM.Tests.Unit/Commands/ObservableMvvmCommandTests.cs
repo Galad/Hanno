@@ -16,8 +16,8 @@ using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Commands
 {
@@ -302,7 +302,7 @@ namespace Hanno.Tests.Commands
 		{
 			//arrange
 			sut.MonitorEvents();
-
+            
 			//act
 			canExecuteChanged.OnNext(Unit.Default);
 			schedulers.AdvanceBy(200);

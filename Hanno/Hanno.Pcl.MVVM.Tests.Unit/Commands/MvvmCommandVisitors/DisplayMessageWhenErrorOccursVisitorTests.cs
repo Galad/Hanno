@@ -7,8 +7,8 @@ using Hanno.Globalization;
 using Hanno.Services;
 using Hanno.Testing.Autofixture;
 using Moq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 using FluentAssertions;
 
 namespace Hanno.Tests.Commands.MvvmCommandVisitors
@@ -64,14 +64,16 @@ namespace Hanno.Tests.Commands.MvvmCommandVisitors
 
 		[Theory, AutoMoqData]
 		public void Visit_WhenSettingDefaultErrorAndResourcesMissing_ShouldThrow(
-			DisplayMessageWhenErrorOccursVisitor sut,
-			Mock<IAsyncMvvmCommand> command,
+            [Frozen]Mock<IResources> resources,
+            DisplayMessageWhenErrorOccursVisitor sut,
+			Mock<IAsyncMvvmCommand> command,            
 			string commandName)
 		{
 			//arrange
 			command.Setup(c => c.Name).Returns(commandName);
 			command.Setup(c => c.SetDefaultError(It.IsAny<Func<CancellationToken, Exception, Task>>()))
 				   .Returns(true);
+            resources.Setup(r => r.Get(It.IsAny<string>())).Returns(string.Empty);
 
 			//act
 			Action action = () => sut.Visit(command.Object);

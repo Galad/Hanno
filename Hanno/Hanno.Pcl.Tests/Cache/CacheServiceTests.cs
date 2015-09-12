@@ -8,9 +8,8 @@ using Hanno.Storage;
 using Hanno.Testing.Autofixture;
 using Ploeh.AutoFixture.AutoMoq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Ploeh.AutoFixture;
-using Xunit.Extensions;
 using Xunit;
 using FluentAssertions;
 using Moq;
@@ -31,15 +30,14 @@ namespace Hanno.Tests.Cache
 				mock.Setup(r => r.Get<CacheServiceTests.TestCacheReturnValue>(It.IsAny<CancellationToken>(), It.IsAny<string>(), It.IsAny<IDictionary<string, string>>()))
 					.ReturnsDefaultTask();
 			}));
-			var now = fixture.Freeze<DateTimeOffset>();
-			NowContext.SetContext(new FuncNow(() => now));
+			fixture.Freeze<DateTimeOffset>();			            
 		}
 	}
 
 	public class CacheServiceCompositeCustomization : CompositeCustomization
 	{
 		public CacheServiceCompositeCustomization()
-			: base(new AutoMoqCustomization(), new CacheServiceCustomization())
+			: base(new HannoCustomization(), new CacheServiceCustomization())
 		{
 		}
 	}
@@ -152,8 +150,7 @@ namespace Hanno.Tests.Cache
 			TestCacheReturnValue notExpected,
 			DateTimeOffset now)
 		{
-			//arrange
-			NowContext.SetContext(new FuncNow(() => now));
+			//arrange			
 			cacheEntryRepo.Setup(c => c.Get<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, It.Is<IDictionary<string, string>>(d => d.Count == 0)))
 			              .ReturnsTask(new CacheEntry<TestCacheReturnValue>(
 				              Guid.NewGuid(),
@@ -460,7 +457,7 @@ namespace Hanno.Tests.Cache
 			await sut.Invalidate<TestCacheReturnValue>(CancellationToken.None, key, TimeSpan.FromMinutes(2));
 
 			//assert
-			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(CancellationToken.None, key, entry.Id), Times.Never());
+			cacheEntryRepo.Verify(c => c.Remove<TestCacheReturnValue>(It.IsAny<CancellationToken>(), key, entry.Id), Times.Never());
 		}
 	}
 }

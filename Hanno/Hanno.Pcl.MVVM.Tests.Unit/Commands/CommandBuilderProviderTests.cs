@@ -6,8 +6,8 @@ using Hanno.Testing.Autofixture;
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoMoq;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.Commands
 {
@@ -83,12 +83,12 @@ namespace Hanno.Tests.Commands
 		public void Get_ShouldCallAccept(
 			string name,
 			ISchedulers schedulers,
-			Mock<ICommandBuilder> commandBuilder,
+		 	Mock<ICommandBuilder> commandBuilder,
 			Mock<IMvvmCommand> command,
 			IMvvmCommandVisitor visitor)
 		{
-			//arrange
-			Action<ICommand> action = null;
+            //arrange                        
+            Action<ICommand> action = null;
 			var sut = new CommandBuilderProvider(schedulers, (action1, schedulers1, n) =>
 			{
 				action = action1;
@@ -125,7 +125,5 @@ namespace Hanno.Tests.Commands
 			//assert
 			other.Verify();
 		}
-
-		
-	}
+    }
 }

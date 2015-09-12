@@ -9,9 +9,9 @@ using Hanno.Http;
 using Hanno.Testing.Autofixture;
 using Moq;
 using Ploeh.AutoFixture.Idioms;
-using Ploeh.AutoFixture.Xunit;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Xunit.Extensions;
+using Xunit;
 
 namespace Hanno.Tests.Http
 {

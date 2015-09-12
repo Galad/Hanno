@@ -9,8 +9,8 @@ using Hanno.Testing.Autofixture;
 using Hanno.ViewModels;
 using Microsoft.Reactive.Testing;
 using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.ViewModels
 {

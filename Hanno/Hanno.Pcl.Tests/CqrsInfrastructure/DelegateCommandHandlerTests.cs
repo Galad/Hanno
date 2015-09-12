@@ -5,8 +5,8 @@ using Hanno.CqrsInfrastructure;
 using Hanno.Testing.Autofixture;
 using Moq;
 using Moq.Protected;
-using Ploeh.AutoFixture.Xunit;
-using Xunit.Extensions;
+using Ploeh.AutoFixture.Xunit2;
+using Xunit;
 
 namespace Hanno.Tests.CqrsInfrastructure
 {
