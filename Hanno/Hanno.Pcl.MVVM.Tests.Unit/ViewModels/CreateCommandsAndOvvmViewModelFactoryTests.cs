@@ -29,7 +29,7 @@ namespace Hanno.Tests.ViewModels
 		}
 		public abstract class ViewModelWithCommands2 : ViewModelBase
 		{
-			public ViewModelWithCommands2() : base(new EmptyViewModelServices())
+			protected ViewModelWithCommands2() : base(new EmptyViewModelServices())
 			{
 			}
 
@@ -40,7 +40,7 @@ namespace Hanno.Tests.ViewModels
 		//make the class and the properties abstract in order to be able to make assertions with a mock
 		public abstract class ViewModelWithCommands : ViewModelBase
 		{
-			public ViewModelWithCommands()
+			protected ViewModelWithCommands()
 				: base(new EmptyViewModelServices())
 			{
 			}

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq.Language.Flow;
+using Xunit;
 
 namespace Hanno.Testing.Autofixture
 {
@@ -91,6 +92,10 @@ namespace Hanno.Testing.Autofixture
 
 		public void Verify()
 		{
+            if (!_isCompleted && !System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
 			_isCompleted.Should().BeTrue("The was expected to be awaited but it was not.");
 		}
 

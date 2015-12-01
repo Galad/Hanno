@@ -60,13 +60,12 @@ namespace Hanno.Testing.Autofixture
 
             fixture.Customizations.Add(
                 new Postprocessor(
-                    builder: new MockPostprocessor(
-                        new MockPostprocessor(
+                    builder: new MockPostprocessor2(
                             new MethodInvoker(
-                                new MockConstructorQuery()))),
+                                new MockConstructorQuery())),
                     command: new CompositeSpecimenCommand(
-                        new MockVirtualMethodsCommand(),
-                        new StubPropertiesCommand()
+                        new MockVirtualMethodsCommand()
+                        //new StubPropertiesCommand()
                         //new StubReadonlyPropertiesCommand()
                         //new AutoMockPropertiesCommand()
                                 )
